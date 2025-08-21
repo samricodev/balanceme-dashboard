@@ -1,20 +1,22 @@
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
-
   return (
-    <>
-      <div className="App">
-        <header className="App-header">
-          <img src="/balanceme.svg" className="App-logo" alt="logo" height="200" width="200" />
-          <h1>Welcome to Balanceme Dashboard</h1>
-          <p>
-            This is a simple dashboard for managing your balance.
-          </p>
-        </header>
-      </div>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
