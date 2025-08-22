@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FormErrors, FormData, AuthResponse } from '../components/auth/types';
+import { FormErrors, FormData, AuthResponse } from '../types/formTypes';
 
 export const useAuth = () => {
   const [isLogin, setIsLogin] = useState(true);

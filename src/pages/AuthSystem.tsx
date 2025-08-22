@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth, useToast } from '../hooks';
 import { User, Mail, Lock } from 'lucide-react';
 import { 
   AuthHeader,
@@ -19,6 +19,7 @@ const AuthSystem: React.FC = () => {
     toggleMode
   } = useAuth();
 
+  const { addToast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -32,13 +33,28 @@ const AuthSystem: React.FC = () => {
           console.log('Token recibido:', result.token);
         }
         
-        alert(`¡${isLogin ? 'Login' : 'Registro'} exitoso! ${result.message || ''}`);
+        addToast({
+          type: 'success',
+          title: `¡${isLogin ? 'Login' : 'Registro'} exitoso!`,
+          message: result.message || `Bienvenido${isLogin ? ' de vuelta' : ' a la plataforma'}`,
+          duration: 4000
+        });
       }
     } catch (error) {
       if (error instanceof Error) {
-        alert(`Error: ${error.message}`);
+        addToast({
+          type: 'error',
+          title: 'Error',
+          message: error.message,
+          duration: 4000
+        });
       } else {
-        alert(`Error de conexión. Verifica que el servidor esté corriendo en localhost:3000`);
+        addToast({
+          type: 'error',
+          title: 'Error de conexión',
+          message: 'Verifica que el servidor esté corriendo en localhost:3000',
+          duration: 4000
+        });
       }
     }
   };
@@ -73,7 +89,7 @@ const AuthSystem: React.FC = () => {
               type="email"
               name="email"
               label="Correo electrónico"
-              placeholder="tu@email.com"
+              placeholder="ejemplo@email.com"
               value={formData.email}
               error={errors.email}
               icon={<Mail className="w-5 h-5" />}

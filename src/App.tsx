@@ -1,8 +1,13 @@
 import AuthSystem from './pages/AuthSystem';
+import ToastProvider from './providers/toastProvider';
+import { ToastContainer } from './components/toast/toastContainer';
 
 const App = () => {
   return (
-    <AuthSystem />
+    <ToastProvider>
+      <AuthSystem />
+      <ToastContainer />
+    </ToastProvider>
   )
 }
 
