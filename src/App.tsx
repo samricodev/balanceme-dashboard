@@ -1,7 +1,14 @@
-import { Auth, Dashboard} from './pages';
+import { 
+  Auth, 
+  Dashboard,
+  Accounts,
+  Categories,
+  Profile,
+  Transactions
+} from './pages';
 import ToastProvider from './providers/toastProvider';
-import { ToastContainer } from './components/toast/toastContainer';
 import { Routes, Route, BrowserRouter} from 'react-router-dom'
+import { ToastContainer } from './components/toast/toastContainer';
 
 const App = () => {
   return (
@@ -10,6 +17,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/cuentas" element={<Accounts />} />
+          <Route path="/transacciones" element={<Transactions />} />
+          <Route path="/categorias" element={<Categories />} />
+          <Route path="/perfil" element={<Profile />} />
         </Routes>
         <ToastContainer />
       </BrowserRouter>
