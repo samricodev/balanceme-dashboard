@@ -27,10 +27,11 @@ const AuthSystem: React.FC = () => {
     try {
       const result = await submitAuth();
       if (result) {
-        console.log(`${isLogin ? 'Login' : 'Registro'} exitoso:`, result);
+        console.log(`${isLogin ? 'Login' : 'Registro'} exitoso`);
         
         if (isLogin && result.token) {
-          console.log('Token recibido:', result.token);
+          localStorage.setItem('token', result.token);
+          console.log('Token recibido');
         }
         
         addToast({
