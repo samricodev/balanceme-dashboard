@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth, useToast } from '../hooks';
 import { User, Mail, Lock } from 'lucide-react';
 import { 
@@ -19,6 +20,7 @@ const AuthSystem: React.FC = () => {
     toggleMode
   } = useAuth();
 
+  const navigate = useNavigate();
   const { addToast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -40,6 +42,10 @@ const AuthSystem: React.FC = () => {
           message: result.message || `Bienvenido${isLogin ? ' de vuelta' : ' a la plataforma'}`,
           duration: 4000
         });
+
+        if (isLogin) {
+          navigate('/dashboard');
+        }
       }
     } catch (error) {
       if (error instanceof Error) {

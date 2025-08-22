@@ -6,7 +6,7 @@ interface ToastProviderProps {
   children: React.ReactNode;
 }
 
-const ToastProvider = ({ children }: ToastProviderProps) => {
+const ToastProvider = ({ children }: ToastProviderProps): React.ReactNode => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = (toastData: Omit<Toast, 'id'>) => {
@@ -19,7 +19,6 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
 
     setToasts(prev => [...prev, toast]);
 
-    // Auto remove toast
     setTimeout(() => {
       removeToast(id);
     }, toast.duration);
