@@ -1,6 +1,5 @@
 import { Eye, EyeOff } from "lucide-react";
 
-// Componente para Input con validación
 interface AuthInputProps {
   type: 'text' | 'email' | 'password';
   name: string;
@@ -40,6 +39,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({
         name={name}
         value={value}
         onChange={onChange}
+        autoComplete="false"
         className={`w-full pl-11 ${type === 'password' ? 'pr-11' : 'pr-4'} py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${error ? 'border-red-300 bg-red-50' : 'border-gray-300'
           }`}
         placeholder={placeholder}
