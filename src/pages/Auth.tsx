@@ -59,7 +59,7 @@ const AuthSystem: React.FC = () => {
         addToast({
           type: 'error',
           title: 'Error de conexión',
-          message: 'Verifica que el servidor esté corriendo en localhost:3000',
+          message: 'Verifica que el servidor esté corriendo en localhost:8080',
           duration: 4000
         });
       }

@@ -67,7 +67,7 @@ export const useAuth = () => {
 
     try {
       const endpoint = isLogin ? 'login' : 'register';
-      const url = `http://localhost:3000/api/auth/${endpoint}`;
+      const url = `http://localhost:8080/api/auth/${endpoint}`;
 
       const payload = isLogin
         ? { email: formData.email, password: formData.password }
