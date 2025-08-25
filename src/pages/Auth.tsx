@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, useToast } from '../hooks';
 import { User, Mail, Lock } from 'lucide-react';
-import { 
+import {
   AuthHeader,
   AuthFooter,
   AuthSubmitButton,
@@ -30,22 +30,23 @@ const AuthSystem: React.FC = () => {
       const result = await submitAuth();
       if (result) {
         console.log(`${isLogin ? 'Login' : 'Registro'} exitoso`);
-        
+
         if (isLogin && result.token) {
           localStorage.setItem('token', result.token);
           console.log('Token recibido');
+          navigate('/dashboard');
+        } else {
+          setTimeout(() => {
+            toggleMode();
+          }, 2000);
         }
-        
+
         addToast({
           type: 'success',
           title: `¡${isLogin ? 'Login' : 'Registro'} exitoso!`,
           message: result.message || `Bienvenido${isLogin ? ' de vuelta' : ' a la plataforma'}`,
           duration: 4000
         });
-
-        if (isLogin) {
-          navigate('/dashboard');
-        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -131,10 +132,10 @@ const AuthSystem: React.FC = () => {
               />
             )}
 
-            <AuthSubmitButton 
-              isLogin={isLogin} 
-              isLoading={isLoading} 
-              onClick={handleSubmit} 
+            <AuthSubmitButton
+              isLogin={isLogin}
+              isLoading={isLoading}
+              onClick={handleSubmit}
             />
           </div>
 

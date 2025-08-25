@@ -25,6 +25,8 @@ export const useAuth = () => {
       newErrors.password = 'La contraseña es requerida';
     } else if (formData.password.length < 6) {
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/.test(formData.password)) {
+      newErrors.password = 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número';
     }
 
     if (!isLogin) {
