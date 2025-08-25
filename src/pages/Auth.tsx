@@ -32,6 +32,12 @@ const AuthSystem: React.FC = () => {
         console.log(`${isLogin ? 'Login' : 'Registro'} exitoso`);
 
         if (isLogin && result.token) {
+          localStorage.setItem(
+            'userId',
+            result.user && typeof result.user === 'object' && 'id' in result.user
+              ? (result.user as { id: string }).id
+              : ''
+          );
           localStorage.setItem('token', result.token);
           console.log('Token recibido');
           navigate('/dashboard');
