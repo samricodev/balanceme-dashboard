@@ -14,6 +14,10 @@ export const Navbar = () => {
               <NavLink to="/transacciones" className="text-gray-800 hover:text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Transacciones</NavLink>
               <NavLink to="/categorias" className="text-gray-800 hover:text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Categorías</NavLink>
               <NavLink to="/perfil" className="text-gray-800 hover:text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Perfil</NavLink>
+              <NavLink to="/" onClick={() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('userId');
+              }} className="text-gray-800 hover:text-gray-600 px-3 py-2 rounded-md text-sm font-medium">Cerrar sesión</NavLink>
             </div>
           </div>
         </div>
