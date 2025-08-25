@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_URL } from '../config/config';
 import { FormErrors, FormData, AuthResponse } from '../types/formTypes';
 
 export const useAuth = () => {
@@ -69,7 +70,7 @@ export const useAuth = () => {
 
     try {
       const endpoint = isLogin ? 'login' : 'register';
-      const url = `http://localhost:8080/api/auth/${endpoint}`;
+      const url = `${API_URL}/auth/${endpoint}`;
 
       const payload = isLogin
         ? { email: formData.email, password: formData.password }

@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../config/config';
 import { Profile } from '../types/profileTypes';
 
 export const useProfile = () => {
   const [profileData, setProfileData] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const url = 'http://localhost:8080/api/auth/profile';
+  const url = `${API_URL}/auth/profile`;
 
   const fetchProfile = async (id: string) => {
     setLoading(true);
     try {
-      //pasar el token en la petición
       const token = localStorage.getItem('token');
       const response = await fetch(`${url}/${id}`, {
         headers: {
@@ -37,6 +37,7 @@ export const useProfile = () => {
     } else {
       setLoading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { profileData, loading, error };
