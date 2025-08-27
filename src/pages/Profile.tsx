@@ -17,25 +17,28 @@ const Profile = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-100">
-        <div className="bg-white p-8 rounded-xl shadow-lg border border-red-200 max-w-md mx-4">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="bg-red-100 p-2 rounded-full">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-100">
+          <div className="bg-white p-8 rounded-xl shadow-lg border border-red-200 max-w-md mx-4">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="bg-red-100 p-2 rounded-full">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Error al cargar</h3>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">Error al cargar</h3>
+            <p className="text-gray-600">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Intentar de nuevo
+            </button>
           </div>
-          <p className="text-gray-600">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
-          >
-            Intentar de nuevo
-          </button>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -69,10 +72,10 @@ const Profile = () => {
                       <span>Nombre completo</span>
                     </label>
                     <div className="relative">
-                      <input 
-                        name="name" 
-                        value={profileData.name || 'No especificado'} 
-                        readOnly 
+                      <input
+                        name="name"
+                        value={profileData.name || 'No especificado'}
+                        readOnly
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 cursor-default"
                       />
                     </div>
@@ -87,10 +90,10 @@ const Profile = () => {
                       <span>Correo electrónico</span>
                     </label>
                     <div className="relative">
-                      <input 
-                        name="email" 
-                        value={profileData.email || 'No especificado'} 
-                        readOnly 
+                      <input
+                        name="email"
+                        value={profileData.email || 'No especificado'}
+                        readOnly
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 cursor-default"
                       />
                     </div>
@@ -105,11 +108,11 @@ const Profile = () => {
                       <span>Contraseña</span>
                     </label>
                     <div className="relative">
-                      <input 
-                        name="password" 
+                      <input
+                        name="password"
                         type="password"
-                        value={profileData.password || ''} 
-                        readOnly 
+                        value={profileData.password || ''}
+                        readOnly
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 cursor-default"
                         placeholder="••••••••"
                       />
