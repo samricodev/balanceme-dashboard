@@ -117,7 +117,7 @@ const Dashboard = () => {
               <p className="text-xl text-indigo-100 mb-8">
                 Aquí tienes un resumen de tus finanzas al {new Date().toLocaleDateString('es-MX')}
               </p>
-              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto">
                 <p className="text-indigo-100 text-sm mb-2">Patrimonio Total</p>
                 <p className="text-4xl font-bold">{formatCurrency(totalBalance)}</p>
               </div>
