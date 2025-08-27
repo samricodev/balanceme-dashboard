@@ -106,7 +106,7 @@ const Transactions = () => {
   };
 
   // Función para obtener color según tipo de transacción
-  const getTransactionColor = (type: string, amount: number) => {
+  const getTransactionColor = (_type: string, amount: number) => {
     if (amount > 0) return 'text-green-600';
     if (amount < 0) return 'text-red-600';
     return 'text-blue-600';

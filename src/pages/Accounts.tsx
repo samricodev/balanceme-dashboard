@@ -1,10 +1,71 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Navbar } from "../components/navbar/Navbar";
-import { useAccounts } from "../hooks/useAccounts";
+// import { useAccounts } from "../hooks/useAccounts";
 
 const Accounts = () => {
-  const { accounts, loading, error } = useAccounts();
+  const mockAccountsData = [
+  {
+    id: 'ACC001',
+    name: 'Cuenta de Ahorro Principal',
+    type: 'ahorro',
+    currency: 'MXN',
+    balance: 25750.50
+  },
+  {
+    id: 'ACC002',
+    name: 'Cuenta Corriente Empresarial',
+    type: 'corriente',
+    currency: 'MXN',
+    balance: 148200.00
+  },
+  {
+    id: 'ACC003',
+    name: 'Tarjeta de Crédito Platinum',
+    type: 'credito',
+    currency: 'MXN',
+    balance: -12300.75 // Saldo negativo para crédito
+  },
+  {
+    id: 'ACC004',
+    name: 'Inversión Dólares',
+    type: 'inversion',
+    currency: 'USD',
+    balance: 5420.30
+  },
+  {
+    id: 'ACC005',
+    name: 'Ahorro Vacaciones',
+    type: 'ahorro',
+    currency: 'MXN',
+    balance: 8950.00
+  },
+  {
+    id: 'ACC006',
+    name: 'Cuenta Corriente Personal',
+    type: 'corriente',
+    currency: 'MXN',
+    balance: 3240.80
+  },
+  {
+    id: 'ACC007',
+    name: 'Inversión Europa',
+    type: 'inversion',
+    currency: 'EUR',
+    balance: 2150.45
+  },
+  {
+    id: 'ACC008',
+    name: 'Tarjeta Crédito Clásica',
+    type: 'credito',
+    currency: 'MXN',
+    balance: -4560.25
+  }
+];
+
+  const accounts = mockAccountsData;
+  const loading = false;
+  const error = null;
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -12,6 +73,7 @@ const Accounts = () => {
     currency: 'MXN',
     initialBalance: ''
   });
+  
 
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     setFormData({
