@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/navbar/Navbar";
 import { useProfile } from "../hooks/useProfile";
 
 const Profile = () => {
   const { profileData, loading, error } = useProfile();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -29,12 +31,11 @@ const Profile = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900">Error al cargar</h3>
             </div>
-            <p className="text-gray-600">{error}</p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => navigate("/")}
               className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
             >
-              Intentar de nuevo
+              Refrescar Sesión
             </button>
           </div>
         </div>
