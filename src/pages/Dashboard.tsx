@@ -57,7 +57,7 @@ const Dashboard = () => {
     const timer = setTimeout(() => {
       setData(mockDashboardData);
       setLoading(false);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
