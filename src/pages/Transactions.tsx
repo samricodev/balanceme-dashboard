@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Navbar } from "../components/navbar/Navbar";
+import { Repeat } from 'lucide-react';
 
 // Mock data para transacciones (reemplaza con tu hook useTransactions)
 const mockTransactions = [
@@ -189,9 +190,7 @@ const Transactions = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
+                    <Repeat size={32} color='indigo' />
                   </div>
                   <div>
                     <h1 className="text-3xl font-bold text-white">Mis Transacciones</h1>

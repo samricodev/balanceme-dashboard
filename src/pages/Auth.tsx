@@ -80,9 +80,9 @@ const AuthSystem: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 animate-gradient-x">
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-8 border border-gray-100">
           <AuthHeader isLogin={isLogin} />
 
           <div className="space-y-6">

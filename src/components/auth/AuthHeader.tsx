@@ -9,8 +9,5 @@ export const AuthHeader: React.FC<{ isLogin: boolean }> = ({ isLogin }) => (
     <h1 className="text-2xl font-bold text-gray-900 mb-2">
       {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
     </h1>
-    <p className="text-gray-600">
-      {isLogin ? 'Bienvenido de vuelta' : 'Únete a nuestra plataforma'}
-    </p>
   </div>
 );
