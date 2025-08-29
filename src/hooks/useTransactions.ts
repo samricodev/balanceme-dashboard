@@ -6,7 +6,7 @@ import { Transaction } from "../types/transaction.type";
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const url = `${API_URL}/transactions`;
 
   useEffect(() => {
@@ -19,10 +19,17 @@ export const useTransactions = () => {
             Authorization: `Bearer ${token}`
           }
         });
+        if (!response.ok) {
+          throw new Error("Failed to fetch transactions");
+        }
         const data = await response.json();
         setTransactions(data);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error(String(err)));
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("An unknown error occurred");
+        }
       } finally {
         setLoading(false);
       }

@@ -10,7 +10,7 @@ const Transactions = () => {
   const [filterType, setFilterType] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
@@ -30,13 +30,13 @@ const Transactions = () => {
   const handleCreateTransaction = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log('Crear transacción:', formData);
-    
+
     // Resetear formulario y cerrar modal
-    setFormData({ 
-      description: '', 
-      amount: '', 
-      type: 'expense', 
-      category: 'alimentacion', 
+    setFormData({
+      description: '',
+      amount: '',
+      type: 'expense',
+      category: 'alimentacion',
       account: '',
       date: new Date().toISOString().split('T')[0]
     });
@@ -70,7 +70,7 @@ const Transactions = () => {
 
   // Función para obtener icono según categoría
   const getCategoryIcon = (category: string) => {
-    switch(category?.toLowerCase()) {
+    switch (category?.toLowerCase()) {
       case 'alimentacion':
         return (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,8 @@ const Transactions = () => {
   };
 
   // Filtrar transacciones
-  const filteredTransactions = transactions.filter(transaction => {
+  const safeTransactions = Array.isArray(transactions) ? transactions : [];
+  const filteredTransactions = safeTransactions.filter(transaction => {
     const matchesType = filterType === 'all' || transaction.type === filterType;
     const matchesCategory = filterCategory === 'all' || transaction.category === filterCategory;
     const matchesSearch = transaction.note.toLowerCase().includes(searchTerm.toLowerCase());
@@ -113,8 +114,8 @@ const Transactions = () => {
   });
 
   // Calcular totales
-  const totalIncome = transactions.filter(t => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
-  const totalExpense = transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + Math.abs(t.amount), 0);
+  const totalIncome = safeTransactions.filter(t => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
+  const totalExpense = safeTransactions.filter(t => t.amount < 0).reduce((sum, t) => sum + Math.abs(t.amount), 0);
   const netBalance = totalIncome - totalExpense;
 
   if (loading) {
@@ -138,7 +139,7 @@ const Transactions = () => {
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 py-8 px-4">
         <div className="max-w-6xl mx-auto">
-          
+
           {/* Header */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8">
@@ -417,10 +418,10 @@ const Transactions = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-red-800">Error al cargar las transacciones</h3>
-                  <p className="text-sm text-red-700 mt-1">{typeof error === 'string' ? error : error?.message || String(error)}</p>
+                  <p className="text-sm text-red-700 mt-1">{error}</p>
                 </div>
-                <button 
-                  onClick={() => window.location.reload()} 
+                <button
+                  onClick={() => window.location.reload()}
                   className="bg-red-600 text-white text-sm py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Reintentar
@@ -430,76 +431,77 @@ const Transactions = () => {
           )}
 
           {/* Lista de transacciones */}
-          {filteredTransactions.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-              <div className="text-center py-16">
-                <Repeat size={72} className="mx-auto mb-4 text-gray-300" />
-                <h3 className="text-xl font-medium text-gray-900 mb-2">No hay transacciones</h3>
-                <p className="text-gray-500 mb-6">
-                  {searchTerm || filterType !== 'all' || filterCategory !== 'all' 
-                    ? 'No se encontraron transacciones con los filtros aplicados' 
-                    : 'Comienza registrando tu primera transacción'
-                  }
-                </p>
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
-                >
-                  Crear Primera Transacción
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-              <div className="divide-y divide-gray-200">
-                {filteredTransactions.map(transaction => (
-                  <div 
-                    key={transaction.id} 
-                    className="p-6 hover:bg-gray-50 transition-colors duration-200"
+          {!error && (
+            filteredTransactions.length === 0 ? (
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="text-center py-16">
+                  <Repeat size={72} className="mx-auto mb-4 text-gray-300" />
+                  <h3 className="text-xl font-medium text-gray-900 mb-2">No hay transacciones</h3>
+                  <p className="text-gray-500 mb-6">
+                    {searchTerm || filterType !== 'all' || filterCategory !== 'all'
+                      ? 'No se encontraron transacciones con los filtros aplicados'
+                      : 'Comienza registrando tu primera transacción'
+                    }
+                  </p>
+                  <button
+                    onClick={() => setShowCreateForm(true)}
+                    className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4 flex-1">
-                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                          {getCategoryIcon(transaction.category)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-semibold text-gray-900 truncate">
-                            {transaction.note}
-                          </h3>
-                          <div className="flex items-center space-x-4 mt-1">
-                            <span className="text-sm text-gray-500">{formatDate(transaction.date)}</span>
-                            <span className="text-sm text-gray-500">•</span>
-                            <span className="text-sm text-gray-500 capitalize">{transaction.category}</span>
-                            <span className="text-sm text-gray-500">•</span>
-                            <span className="text-sm text-gray-500">{transaction.account}</span>
+                    Crear Primera Transacción
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="divide-y divide-gray-200">
+                  {filteredTransactions.map(transaction => (
+                    <div
+                      key={transaction.id}
+                      className="p-6 hover:bg-gray-50 transition-colors duration-200"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4 flex-1">
+                          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                            {getCategoryIcon(transaction.category)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg font-semibold text-gray-900 truncate">
+                              {transaction.note}
+                            </h3>
+                            <div className="flex items-center space-x-4 mt-1">
+                              <span className="text-sm text-gray-500">{formatDate(transaction.date)}</span>
+                              <span className="text-sm text-gray-500">•</span>
+                              <span className="text-sm text-gray-500 capitalize">{transaction.category}</span>
+                              <span className="text-sm text-gray-500">•</span>
+                              <span className="text-sm text-gray-500">{transaction.account}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <p className={`text-xl font-bold ${getTransactionColor(transaction.type, transaction.amount)}`}>
-                          {transaction.amount > 0 ? '+' : '-'}{formatCurrency(Math.abs(transaction.amount), transaction.currency)}
-                        </p>
-                        <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-1 ${
-                          transaction.type === 'income' ? 'bg-green-100 text-green-800' :
-                          transaction.type === 'expense' ? 'bg-red-100 text-red-800' :
-                          'bg-blue-100 text-blue-800'
-                        }`}>
-                          {transaction.type === 'income' ? 'Ingreso' :
-                           transaction.type === 'expense' ? 'Gasto' : 'Transferencia'}
-                        </span>
+                        <div className="text-right">
+                          <p className={`text-xl font-bold ${getTransactionColor(transaction.type, transaction.amount)}`}>
+                            {transaction.amount > 0 ? '+' : '-'}{formatCurrency(Math.abs(transaction.amount), transaction.currency)}
+                          </p>
+                          <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-1 ${transaction.type === 'income' ? 'bg-green-100 text-green-800' :
+                            transaction.type === 'expense' ? 'bg-red-100 text-red-800' :
+                              'bg-blue-100 text-blue-800'
+                            }`}>
+                            {transaction.type === 'income' ? 'Ingreso' :
+                              transaction.type === 'expense' ? 'Gasto' : 'Transferencia'}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* Paginación o información adicional */}
-              <div className="bg-gray-50 p-4 border-t border-gray-200">
-                <p className="text-sm text-gray-600 text-center">
-                  Mostrando {filteredTransactions.length} de {transactions.length} transacciones
-                </p>
+                {/* Paginación o información adicional */}
+                <div className="bg-gray-50 p-4 border-t border-gray-200">
+                  <p className="text-sm text-gray-600 text-center">
+                    Mostrando {filteredTransactions.length} de {transactions.length} transacciones
+                  </p>
+                </div>
               </div>
-            </div>
+            )
           )}
         </div>
       </div>
