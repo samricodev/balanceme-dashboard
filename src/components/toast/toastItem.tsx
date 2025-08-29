@@ -1,4 +1,4 @@
-import { Toast } from "../../types/toastTypes";
+import { Toast } from "../../types/toast.type";
 import React, { useState, useEffect } from "react";
 import { 
   CheckCircle, 

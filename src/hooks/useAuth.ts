@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { API_URL } from '../config/config';
-import { FormErrors, FormData, AuthResponse } from '../types/formTypes';
+import { FormErrors, FormData, AuthResponse } from '../types/form.type';
 
 export const useAuth = () => {
   const [isLogin, setIsLogin] = useState(true);

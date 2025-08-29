@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { API_URL } from '../config/config';
-import { Profile } from '../types/profileTypes';
+import { Profile } from '../types/profile.type';
 
 export const useProfile = () => {
   const [profileData, setProfileData] = useState<Profile | null>(null);

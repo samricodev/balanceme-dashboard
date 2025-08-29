@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ToastContext } from "../contexts/toastContext";
-import { Toast } from "../types/toastTypes";
+import { Toast } from "../types/toast.type";
 
 interface ToastProviderProps {
   children: React.ReactNode;

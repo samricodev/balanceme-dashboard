@@ -1,4 +1,4 @@
-import { Transaction } from './transactionTypes';
+import { Transaction } from './transaction.type';
 
 interface Account {
   id: string;

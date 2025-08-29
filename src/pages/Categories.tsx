@@ -1,78 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Tags } from 'lucide-react';
+import { Category } from '../types/category.type';
 import { Navbar } from "../components/navbar/Navbar";
-
-// Mock data para categorías (reemplaza con tu hook useCategories)
-const mockCategories = [
-  {
-    id: 1,
-    name: "Alimentación",
-    type: "expense",
-    color: "#EF4444",
-    icon: "shopping-cart",
-    description: "Gastos en comida y bebidas",
-    transactionCount: 25,
-    totalAmount: 15420.50
-  },
-  {
-    id: 2,
-    name: "Servicios",
-    type: "expense", 
-    color: "#F59E0B",
-    icon: "zap",
-    description: "Luz, agua, internet, teléfono",
-    transactionCount: 12,
-    totalAmount: 8930.00
-  },
-  {
-    id: 3,
-    name: "Salario",
-    type: "income",
-    color: "#10B981",
-    icon: "dollar-sign",
-    description: "Ingresos por trabajo",
-    transactionCount: 4,
-    totalAmount: 85000.00
-  },
-  {
-    id: 4,
-    name: "Transporte",
-    type: "expense",
-    color: "#3B82F6",
-    icon: "truck",
-    description: "Gasolina, Uber, transporte público",
-    transactionCount: 18,
-    totalAmount: 6750.00
-  },
-  {
-    id: 5,
-    name: "Entretenimiento",
-    type: "expense",
-    color: "#8B5CF6",
-    icon: "music",
-    description: "Cine, conciertos, suscripciones",
-    transactionCount: 8,
-    totalAmount: 3200.00
-  },
-  {
-    id: 6,
-    name: "Inversiones",
-    type: "income",
-    color: "#059669",
-    icon: "trending-up",
-    description: "Rendimientos de inversiones",
-    transactionCount: 6,
-    totalAmount: 12500.00
-  }
-];
+import { useCategories } from '../hooks/useCategories';
+  
 
 const Categories = () => {
-  const [categories] = useState(mockCategories);
-  const [loading] = useState(false);
-  const [error] = useState(null);
+  const { categories, loading, error } = useCategories();
   const [showCreateForm, setShowCreateForm] = useState(false);
-  type Category = typeof mockCategories[number];
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -100,13 +36,12 @@ const Categories = () => {
       console.log('Crear categoría:', formData);
     }
     
-    // Resetear formulario y cerrar modal
     setFormData({ name: '', type: 'expense', color: '#3B82F6', icon: 'tag', description: '' });
     setShowCreateForm(false);
     setEditingCategory(null);
   };
 
-  const handleEditCategory = (category: any) => {
+  const handleEditCategory = (category: Category) => {
     setEditingCategory(category);
     setFormData({
       name: category.name,
@@ -510,7 +445,7 @@ const Categories = () => {
           )}
 
           {/* Lista de categorías */}
-          {filteredCategories.length === 0 ? (
+          {filteredCategories.length === 0 && !error ? (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
               <div className="text-center py-16">
                 <svg className="w-20 h-20 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

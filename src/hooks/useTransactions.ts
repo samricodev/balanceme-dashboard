@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { API_URL } from "../config/config";
 import { useState, useEffect } from "react";
-import { Transaction } from "../types/transactionTypes";
+import { Transaction } from "../types/transaction.type";
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);

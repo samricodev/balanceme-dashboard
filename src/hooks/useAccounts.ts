@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect} from 'react';
 import { API_URL } from '../config/config';
-import { Account } from '../types/accountTypes';
+import { Account } from '../types/account.type';
 
 export const useAccounts = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
