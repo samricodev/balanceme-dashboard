@@ -1,19 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Navbar } from "../components/navbar/Navbar";
 import { Wallet } from 'lucide-react';
 import { useAccounts } from "../hooks/useAccounts";
+import { Navbar } from "../components/navbar/Navbar";
 
 const Accounts = () => {
-  const { accounts, loading, error } = useAccounts();
+  const {
+  accounts,
+  loading,
+  error,
+  createAccount,
+  // updateAccount,
+  // deleteAccount,
+  // clearError
+} = useAccounts();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    type: 'ahorro',
+    type: 'savings',
     currency: 'MXN',
-    initialBalance: ''
+    balance: 0
   });
-  
+
 
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     setFormData({
@@ -22,15 +30,30 @@ const Accounts = () => {
     });
   };
 
-  const handleCreateAccount = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    // Aquí iría la lógica para crear la cuenta
-    console.log('Crear cuenta:', formData);
-    
-    // Resetear formulario y cerrar modal
-    setFormData({ name: '', type: 'ahorro', currency: 'MXN', initialBalance: '' });
+const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  const result = await createAccount({
+    userId: localStorage.getItem('userId') || '',
+    name: formData.name,
+    type: formData.type,
+    currency: formData.currency,
+    balance: Number(formData.balance) || 0
+  });
+
+  if (result.success) {
+    // Éxito - cerrar formulario, etc.
+    setFormData({
+      name: '',
+      type: 'ahorro',
+      currency: 'MXN',
+      balance: 0
+    });
     setShowCreateForm(false);
-  };
+  } else {
+    // Error ya está en el estado del hook
+    console.error('Error:', result.error);
+  }
+};
 
   // Función para formatear números como moneda
   const formatCurrency = (amount: number, currency: string) => {
@@ -125,7 +148,7 @@ const Accounts = () => {
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 py-8 px-4">
         <div className="max-w-6xl mx-auto">
-          
+
           {/* Header */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8">
@@ -210,10 +233,10 @@ const Accounts = () => {
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
-                      <option value="ahorro">Cuenta de Ahorro</option>
-                      <option value="corriente">Cuenta Corriente</option>
-                      <option value="credito">Tarjeta de Crédito</option>
-                      <option value="inversion">Cuenta de Inversión</option>
+                      <option value="savings">Cuenta de Ahorro</option>
+                      <option value="checking">Cuenta Corriente</option>
+                      <option value="credit">Tarjeta de Crédito</option>
+                      <option value="investment">Cuenta de Inversión</option>
                     </select>
                   </div>
 
@@ -239,8 +262,8 @@ const Accounts = () => {
                     </label>
                     <input
                       type="number"
-                      name="initialBalance"
-                      value={formData.initialBalance}
+                      name="balance"
+                      value={formData.balance}
                       onChange={handleInputChange}
                       step="0.01"
                       min="0"
@@ -282,8 +305,8 @@ const Accounts = () => {
                   <h3 className="text-sm font-medium text-red-800">Error al cargar las cuentas</h3>
                   <p className="text-sm text-red-700 mt-1">{error}</p>
                 </div>
-                <button 
-                  onClick={() => window.location.reload()} 
+                <button
+                  onClick={() => window.location.reload()}
                   className="bg-red-600 text-white text-sm py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Reintentar
@@ -310,8 +333,8 @@ const Accounts = () => {
           ) : accounts && accounts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {accounts.map(account => (
-                <div 
-                  key={account.id} 
+                <div
+                  key={account.id}
                   className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                 >
                   {/* Header de la tarjeta */}
