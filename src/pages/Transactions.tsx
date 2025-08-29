@@ -1,56 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Navbar } from "../components/navbar/Navbar";
 import { Repeat } from 'lucide-react';
-
-// Mock data para transacciones (reemplaza con tu hook useTransactions)
-const mockTransactions = [
-  {
-    id: 1,
-    description: "Pago en SuperMercado ABC",
-    amount: -1250.00,
-    type: "expense",
-    category: "alimentacion",
-    date: "2024-01-15",
-    account: "Cuenta de Ahorro",
-    currency: "MXN"
-  },
-  {
-    id: 2,
-    description: "Salario Enero",
-    amount: 25000.00,
-    type: "income",
-    category: "salario",
-    date: "2024-01-01",
-    account: "Cuenta Corriente",
-    currency: "MXN"
-  },
-  {
-    id: 3,
-    description: "Transferencia a ahorros",
-    amount: -5000.00,
-    type: "transfer",
-    category: "transferencia",
-    date: "2024-01-10",
-    account: "Cuenta Corriente",
-    currency: "MXN"
-  },
-  {
-    id: 4,
-    description: "Pago de servicios",
-    amount: -890.50,
-    type: "expense",
-    category: "servicios",
-    date: "2024-01-08",
-    account: "Cuenta de Ahorro",
-    currency: "MXN"
-  }
-];
+import { Navbar } from "../components/navbar/Navbar";
+import { useTransactions } from '../hooks/useTransactions';
 
 const Transactions = () => {
-  const [transactions] = useState(mockTransactions);
-  const [loading] = useState(false);
-  const [error] = useState(null);
+  const { transactions, loading, error } = useTransactions();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [filterType, setFilterType] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
@@ -153,7 +108,7 @@ const Transactions = () => {
   const filteredTransactions = transactions.filter(transaction => {
     const matchesType = filterType === 'all' || transaction.type === filterType;
     const matchesCategory = filterCategory === 'all' || transaction.category === filterCategory;
-    const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = transaction.note.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesType && matchesCategory && matchesSearch;
   });
 
@@ -462,7 +417,7 @@ const Transactions = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-red-800">Error al cargar las transacciones</h3>
-                  <p className="text-sm text-red-700 mt-1">{error}</p>
+                  <p className="text-sm text-red-700 mt-1">{typeof error === 'string' ? error : error?.message || String(error)}</p>
                 </div>
                 <button 
                   onClick={() => window.location.reload()} 
@@ -511,7 +466,7 @@ const Transactions = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-lg font-semibold text-gray-900 truncate">
-                            {transaction.description}
+                            {transaction.note}
                           </h3>
                           <div className="flex items-center space-x-4 mt-1">
                             <span className="text-sm text-gray-500">{formatDate(transaction.date)}</span>
