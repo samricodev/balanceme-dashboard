@@ -10,9 +10,6 @@ const Accounts = () => {
   loading,
   error,
   createAccount,
-  // updateAccount,
-  // deleteAccount,
-  // clearError
 } = useAccounts();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [formData, setFormData] = useState({

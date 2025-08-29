@@ -4,15 +4,20 @@ import { Tags } from 'lucide-react';
 import { Category } from '../types/category.type';
 import { Navbar } from "../components/navbar/Navbar";
 import { useCategories } from '../hooks/useCategories';
-  
+
 
 const Categories = () => {
-  const { categories, loading, error } = useCategories();
+  const {
+    categories,
+    loading,
+    error,
+    createCategory,
+  } = useCategories();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const [formData, setFormData] = useState({
     name: '',
     type: 'expense',
@@ -28,17 +33,33 @@ const Categories = () => {
     });
   };
 
-  const handleCreateCategory = (e: { preventDefault: () => void; }) => {
+  const handleCreateCategory = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (editingCategory) {
-      console.log('Actualizar categoría:', editingCategory.id, formData);
+    const result = await createCategory({
+      userId: localStorage.getItem('userId') || '',
+      name: formData.name,
+      type: formData.type,
+      color: formData.color,
+      icon: formData.icon,
+      description: formData.description,
+      transactionCount: 0,
+      totalAmount: 0
+    });
+
+    if (result.success) {
+      // Éxito - cerrar formulario, etc.
+      setFormData({
+        name: '',
+        type: 'expense',
+        color: '#3B82F6',
+        icon: 'tag',
+        description: '',
+      });
+      setShowCreateForm(false);
     } else {
-      console.log('Crear categoría:', formData);
+      // Error ya está en el estado del hook
+      console.error('Error:', result.error);
     }
-    
-    setFormData({ name: '', type: 'expense', color: '#3B82F6', icon: 'tag', description: '' });
-    setShowCreateForm(false);
-    setEditingCategory(null);
   };
 
   const handleEditCategory = (category: Category) => {
@@ -133,13 +154,13 @@ const Categories = () => {
 
   // Colores predefinidos
   const predefinedColors = [
-    '#EF4444', '#F59E0B', '#10B981', '#3B82F6', 
+    '#EF4444', '#F59E0B', '#10B981', '#3B82F6',
     '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'
   ];
 
   // Iconos disponibles
   const availableIcons = [
-    'shopping-cart', 'zap', 'dollar-sign', 'truck', 'music', 
+    'shopping-cart', 'zap', 'dollar-sign', 'truck', 'music',
     'trending-up', 'tag', 'home', 'heart', 'book'
   ];
 
@@ -177,7 +198,7 @@ const Categories = () => {
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 py-8 px-4">
         <div className="max-w-6xl mx-auto">
-          
+
           {/* Header */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8">
@@ -351,7 +372,7 @@ const Categories = () => {
                         <button
                           key={color}
                           type="button"
-                          onClick={() => setFormData({...formData, color})}
+                          onClick={() => setFormData({ ...formData, color })}
                           className={`w-12 h-12 rounded-xl border-2 ${formData.color === color ? 'border-gray-800 scale-110' : 'border-gray-200'} transition-all duration-200`}
                           style={{ backgroundColor: color }}
                         />
@@ -375,11 +396,11 @@ const Categories = () => {
                         <button
                           key={icon}
                           type="button"
-                          onClick={() => setFormData({...formData, icon})}
-                          className={`p-3 rounded-xl border transition-all duration-200 ${formData.icon === icon 
-                            ? 'border-indigo-500 bg-indigo-50 text-indigo-600' 
+                          onClick={() => setFormData({ ...formData, icon })}
+                          className={`p-3 rounded-xl border transition-all duration-200 ${formData.icon === icon
+                            ? 'border-indigo-500 bg-indigo-50 text-indigo-600'
                             : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                          }`}
+                            }`}
                         >
                           {getIconSVG(icon)}
                         </button>
@@ -434,8 +455,8 @@ const Categories = () => {
                   <h3 className="text-sm font-medium text-red-800">Error al cargar las categorías</h3>
                   <p className="text-sm text-red-700 mt-1">{error}</p>
                 </div>
-                <button 
-                  onClick={() => window.location.reload()} 
+                <button
+                  onClick={() => window.location.reload()}
                   className="bg-red-600 text-white text-sm py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
                 >
                   Reintentar
@@ -451,8 +472,8 @@ const Categories = () => {
                 <Tags size={72} className="mx-auto mb-4 text-gray-300" />
                 <h3 className="text-xl font-medium text-gray-900 mb-2">No hay categorías</h3>
                 <p className="text-gray-500 mb-6">
-                  {searchTerm || filterType !== 'all' 
-                    ? 'No se encontraron categorías con los filtros aplicados' 
+                  {searchTerm || filterType !== 'all'
+                    ? 'No se encontraron categorías con los filtros aplicados'
                     : 'Comienza creando tu primera categoría para organizar tus transacciones'
                   }
                 </p>
@@ -467,14 +488,14 @@ const Categories = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCategories.map(category => (
-                <div 
-                  key={category.id} 
+                <div
+                  key={category.id}
                   className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                 >
                   {/* Header de la tarjeta */}
                   <div className="p-6 border-b border-gray-100">
                     <div className="flex items-center justify-between mb-4">
-                      <div 
+                      <div
                         className="w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg"
                         style={{ backgroundColor: category.color }}
                       >
@@ -499,14 +520,13 @@ const Categories = () => {
                         </button>
                       </div>
                     </div>
-                    
+
                     <div className="mb-3">
                       <h2 className="text-xl font-bold text-gray-900 mb-1">{category.name}</h2>
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                        category.type === 'income' 
-                          ? 'bg-green-100 text-green-800 border border-green-200' 
-                          : 'bg-red-100 text-red-800 border border-red-200'
-                      }`}>
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${category.type === 'income'
+                        ? 'bg-green-100 text-green-800 border border-green-200'
+                        : 'bg-red-100 text-red-800 border border-red-200'
+                        }`}>
                         {category.type === 'income' ? 'Ingreso' : 'Gasto'}
                       </span>
                     </div>
@@ -537,9 +557,9 @@ const Categories = () => {
 
                       {/* Barra de progreso (opcional) */}
                       <div className="bg-gray-100 rounded-full h-2 overflow-hidden">
-                        <div 
+                        <div
                           className="h-full transition-all duration-300"
-                          style={{ 
+                          style={{
                             backgroundColor: category.color,
                             width: `${Math.min((category.transactionCount / Math.max(...categories.map(c => c.transactionCount))) * 100, 100)}%`
                           }}
@@ -551,7 +571,7 @@ const Categories = () => {
                         <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 px-4 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg text-sm">
                           Ver Transacciones
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleEditCategory(category)}
                           className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 text-sm"
                         >
