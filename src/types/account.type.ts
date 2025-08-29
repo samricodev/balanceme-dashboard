@@ -3,7 +3,6 @@ import { Transaction } from './transaction.type';
 interface Account {
   id: string;
   name: string;
-  userId: string;
   type: string;
   currency: string;
   balance: number;

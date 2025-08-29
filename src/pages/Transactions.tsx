@@ -433,9 +433,7 @@ const Transactions = () => {
           {filteredTransactions.length === 0 ? (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
               <div className="text-center py-16">
-                <svg className="w-20 h-20 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 8h6m-6 4h6" />
-                </svg>
+                <Repeat size={72} className="mx-auto mb-4 text-gray-300" />
                 <h3 className="text-xl font-medium text-gray-900 mb-2">No hay transacciones</h3>
                 <p className="text-gray-500 mb-6">
                   {searchTerm || filterType !== 'all' || filterCategory !== 'all' 
