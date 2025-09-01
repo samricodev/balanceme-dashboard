@@ -12,6 +12,7 @@ const Categories = () => {
     loading,
     error,
     createCategory,
+    refetch
   } = useCategories();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -55,6 +56,7 @@ const Categories = () => {
         icon: 'tag',
         description: '',
       });
+      refetch();
       setShowCreateForm(false);
     } else {
       // Error ya está en el estado del hook
@@ -215,7 +217,7 @@ const Categories = () => {
                 <div className="text-right text-white">
                   <p className="text-sm text-indigo-100 mb-1">Total de Categorías</p>
                   <p className="text-3xl font-bold">{totalCategories}</p>
-                  <p className="text-sm text-indigo-100">{totalTransactions} transacciones</p>
+                  <p className="text-sm text-indigo-100">{isNaN(totalTransactions) ? 0 : totalTransactions} transacciones</p>
                 </div>
               </div>
             </div>
@@ -260,7 +262,7 @@ const Categories = () => {
                     </div>
                     <div>
                       <p className="text-sm text-blue-700 font-medium">Total Transacciones</p>
-                      <p className="text-xl font-bold text-blue-800">{totalTransactions}</p>
+                      <p className="text-xl font-bold text-blue-800">{isNaN(totalTransactions) ? 0 : totalTransactions}</p>
                     </div>
                   </div>
                 </div>
@@ -497,7 +499,7 @@ const Categories = () => {
                     <div className="flex items-center justify-between mb-4">
                       <div
                         className="w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg"
-                        style={{ backgroundColor: category.color }}
+                        style={{ backgroundColor: String(category.color) }}
                       >
                         {getIconSVG(category.icon)}
                       </div>
