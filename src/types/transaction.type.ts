@@ -1,7 +1,7 @@
 interface Transaction {
   id: string;
-  account: string;
-  category: string;
+  accountId: string;
+  categoryId: string;
   type: string;
   amount: number;
   currency: string;
