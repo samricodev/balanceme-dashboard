@@ -1,21 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Repeat } from 'lucide-react';
+import { useAccounts } from '../hooks/useAccounts';
 import { Navbar } from "../components/navbar/Navbar";
+import { useCategories } from '../hooks/useCategories';
 import { useTransactions } from '../hooks/useTransactions';
 
 const Transactions = () => {
+  const { accounts } = useAccounts();
+  const { categories } = useCategories();
   const { transactions, loading, error } = useTransactions();
+
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [filterType, setFilterType] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
   const [formData, setFormData] = useState({
-    description: '',
+    note: '',
     amount: '',
     type: 'expense',
-    category: 'alimentacion',
+    category: '',
     account: '',
     date: new Date().toISOString().split('T')[0]
   });
@@ -33,10 +38,10 @@ const Transactions = () => {
 
     // Resetear formulario y cerrar modal
     setFormData({
-      description: '',
+      note: '',
       amount: '',
       type: 'expense',
-      category: 'alimentacion',
+      category: '',
       account: '',
       date: new Date().toISOString().split('T')[0]
     });
@@ -295,8 +300,8 @@ const Transactions = () => {
                     </label>
                     <input
                       type="text"
-                      name="description"
-                      value={formData.description}
+                      name="note"
+                      value={formData.note}
                       onChange={handleInputChange}
                       required
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
@@ -346,12 +351,11 @@ const Transactions = () => {
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
-                      <option value="alimentacion">Alimentación</option>
-                      <option value="servicios">Servicios</option>
-                      <option value="salario">Salario</option>
-                      <option value="transferencia">Transferencia</option>
-                      <option value="entretenimiento">Entretenimiento</option>
-                      <option value="transporte">Transporte</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -380,10 +384,11 @@ const Transactions = () => {
                       required
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
-                      <option value="">Selecciona una cuenta</option>
-                      <option value="Cuenta de Ahorro">Cuenta de Ahorro</option>
-                      <option value="Cuenta Corriente">Cuenta Corriente</option>
-                      <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+                      {accounts.map((account) => (
+                        <option key={account.id} value={account.id}>
+                          {account.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
