@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_URL } from '../config/config';
 import { Account } from '../types/account.type';
+import { getAuthHeaders } from '../utils/getHeaders';
+import { handleApiError } from '../utils/handleApiError';
 import { useState, useEffect, useCallback } from 'react';
 
 interface CreateAccountData {
@@ -30,28 +32,6 @@ export const useAccounts = () => {
   const [error, setError] = useState<string | null>(null);
   const url = `${API_URL}/accounts`;
 
-  // Función auxiliar para obtener headers de autorización
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    };
-  };
-
-  // Función auxiliar para manejar errores de respuesta
-  const handleApiError = async (response: Response): Promise<string> => {
-    if (!response.ok) {
-      try {
-        const errorData = await response.json();
-        return errorData.message || `Error ${response.status}: ${response.statusText}`;
-      } catch {
-        return `Error ${response.status}: ${response.statusText}`;
-      }
-    }
-    return '';
-  };
-
   // Fetch inicial de cuentas
   const fetchAccounts = useCallback(async (): Promise<void> => {
     setLoading(true);
@@ -59,16 +39,12 @@ export const useAccounts = () => {
     
     try {
       const userId = localStorage.getItem('userId');
-      const token = localStorage.getItem('token');
-      
-      if (!userId || !token) {
+      if (!userId) {
         throw new Error('Usuario no autenticado');
       }
 
       const response = await fetch(`${url}/${userId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: getAuthHeaders()
       });
 
       if (!response.ok) {

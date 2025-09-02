@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_URL } from "../config/config";
-import { useState, useEffect, useCallback } from "react";
 import { Category } from "../types/category.type";
+import { getAuthHeaders } from "../utils/getHeaders";
+import { useState, useEffect, useCallback } from "react";
 
 interface CreateCategoryData {
   userId: string;
@@ -25,15 +26,6 @@ export const useCategories = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const url = `${API_URL}/categories`;
-
-  // Función auxiliar para obtener headers de autorización
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    };
-  };
 
   // Función auxiliar para manejar errores de respuesta
   const handleApiError = async (response: Response): Promise<string> => {
