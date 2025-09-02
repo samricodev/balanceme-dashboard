@@ -7,21 +7,26 @@ import { useCategories } from '../hooks/useCategories';
 import { useTransactions } from '../hooks/useTransactions';
 
 const Transactions = () => {
+  const {
+    transactions,
+    loading,
+    error,
+    createTransaction,
+    refetch
+  } = useTransactions();
   const { accounts } = useAccounts();
   const { categories } = useCategories();
-  const { transactions, loading, error } = useTransactions();
-
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [filterType, setFilterType] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
   const [formData, setFormData] = useState({
+    accountId: '',
+    categoryId: '',
     note: '',
     amount: '',
     type: 'expense',
-    category: '',
-    account: '',
     date: new Date().toISOString().split('T')[0]
   });
 
@@ -32,20 +37,33 @@ const Transactions = () => {
     });
   };
 
-  const handleCreateTransaction = (e: { preventDefault: () => void; }) => {
+  const handleCreateTransaction = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    console.log('Crear transacción:', formData);
-
-    // Resetear formulario y cerrar modal
-    setFormData({
-      note: '',
-      amount: '',
-      type: 'expense',
-      category: '',
-      account: '',
-      date: new Date().toISOString().split('T')[0]
+    const result = await createTransaction({
+      userId: localStorage.getItem("userId") || '',
+      accountId: formData.accountId,
+      categoryId: formData.categoryId,
+      note: formData.note,
+      amount: parseFloat(formData.amount),
+      type: formData.type as 'income' | 'expense' | 'transfer',
+      date: formData.date
     });
-    setShowCreateForm(false);
+
+    if (result.success) {
+      // Resetear formulario y cerrar modal
+      setFormData({
+        accountId: '',
+        categoryId: '',
+        note: '',
+        amount: '',
+        type: 'expense',
+        date: new Date().toISOString().split('T')[0]
+      });
+      refetch();
+      setShowCreateForm(false);
+    } else {
+      console.error('Error creating transaction:', result.error);
+    }
   };
 
   // Función para formatear números como moneda
@@ -349,18 +367,22 @@ const Transactions = () => {
                   </div>
 
                   <div>
-                    <label htmlFor='category' className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor='categoryId' className="block text-sm font-semibold text-gray-700 mb-2">
                       Categoría
                     </label>
                     <select
-                      name="category"
-                      id="category"
-                      value={formData.category}
+                      name="categoryId"
+                      id="categoryId"
+                      value={formData.categoryId}
                       onChange={handleInputChange}
+                      required
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
+                      <option value="" disabled>
+                        Selecciona una categoría
+                      </option>
                       {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
+                        <option key={category.id} value={String(category.id)}>
                           {category.name}
                         </option>
                       ))}
@@ -383,19 +405,22 @@ const Transactions = () => {
                   </div>
 
                   <div>
-                    <label htmlFor='account' className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor='accountId' className="block text-sm font-semibold text-gray-700 mb-2">
                       Cuenta
                     </label>
                     <select
-                      name="account"
-                      id="account"
-                      value={formData.account}
+                      name="accountId"
+                      id="accountId"
+                      value={formData.accountId}
                       onChange={handleInputChange}
                       required
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
+                      <option value="" disabled>
+                        Selecciona una cuenta
+                      </option>
                       {accounts.map((account) => (
-                        <option key={account.id} value={account.id}>
+                        <option key={account.id} value={String(account.id)}>
                           {account.name}
                         </option>
                       ))}

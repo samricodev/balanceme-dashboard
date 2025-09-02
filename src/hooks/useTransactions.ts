@@ -48,7 +48,7 @@ export const useTransactions = () => {
         throw new Error("User not authenticated");
       }
 
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/${userId}`, {
         headers: getAuthHeaders()
       });
 
@@ -84,7 +84,7 @@ export const useTransactions = () => {
         userId
       };
 
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/create`, {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify(dataToSend)

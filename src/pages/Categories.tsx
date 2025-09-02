@@ -277,6 +277,7 @@ const Categories = () => {
                 {/* Búsqueda */}
                 <div className="flex-1">
                   <input
+                    name="searchCategory"
                     type="text"
                     placeholder="Buscar categorías..."
                     value={searchTerm}
@@ -288,6 +289,7 @@ const Categories = () => {
                 {/* Filtro de tipo */}
                 <div>
                   <select
+                    name="filterType"
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
                     className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
