@@ -223,6 +223,7 @@ const Transactions = () => {
                 {/* Búsqueda */}
                 <div className="flex-1">
                   <input
+                    name="search"
                     type="text"
                     placeholder="Buscar transacciones..."
                     value={searchTerm}
@@ -234,6 +235,7 @@ const Transactions = () => {
                 {/* Filtros */}
                 <div className="flex gap-4">
                   <select
+                    name="filterType"
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
                     className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -245,15 +247,17 @@ const Transactions = () => {
                   </select>
 
                   <select
+                    name="filterCategory"
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
                     className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   >
                     <option value="all">Todas las categorías</option>
-                    <option value="alimentacion">Alimentación</option>
-                    <option value="servicios">Servicios</option>
-                    <option value="salario">Salario</option>
-                    <option value="transferencia">Transferencia</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -295,12 +299,13 @@ const Transactions = () => {
 
                 <form onSubmit={handleCreateTransaction} className="p-6 space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor='note' className="block text-sm font-semibold text-gray-700 mb-2">
                       Descripción
                     </label>
                     <input
                       type="text"
                       name="note"
+                      id="note"
                       value={formData.note}
                       onChange={handleInputChange}
                       required
@@ -310,12 +315,13 @@ const Transactions = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor='amount' className="block text-sm font-semibold text-gray-700 mb-2">
                       Monto
                     </label>
                     <input
                       type="number"
                       name="amount"
+                      id="amount"
                       value={formData.amount}
                       onChange={handleInputChange}
                       required
@@ -326,11 +332,12 @@ const Transactions = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor='type' className="block text-sm font-semibold text-gray-700 mb-2">
                       Tipo
                     </label>
                     <select
                       name="type"
+                      id="type"
                       value={formData.type}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
@@ -342,11 +349,12 @@ const Transactions = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor='category' className="block text-sm font-semibold text-gray-700 mb-2">
                       Categoría
                     </label>
                     <select
                       name="category"
+                      id="category"
                       value={formData.category}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
@@ -360,12 +368,13 @@ const Transactions = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor='date' className="block text-sm font-semibold text-gray-700 mb-2">
                       Fecha
                     </label>
                     <input
                       type="date"
                       name="date"
+                      id="date"
                       value={formData.date}
                       onChange={handleInputChange}
                       required
@@ -374,11 +383,12 @@ const Transactions = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor='account' className="block text-sm font-semibold text-gray-700 mb-2">
                       Cuenta
                     </label>
                     <select
                       name="account"
+                      id="account"
                       value={formData.account}
                       onChange={handleInputChange}
                       required
