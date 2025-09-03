@@ -1,33 +1,3 @@
-  // Función para mostrar nombre y color según el tipo de transacción
-  const getTransactionTypeDisplay = (type: string) => {
-    switch (type) {
-      case 'income':
-        return {
-          label: 'Ingreso',
-          className: 'bg-green-100 text-green-800'
-        };
-      case 'expense':
-        return {
-          label: 'Gasto',
-          className: 'bg-red-100 text-red-800'
-        };
-      case 'saving':
-        return {
-          label: 'Ahorro',
-          className: 'bg-blue-100 text-blue-800'
-        };
-      case 'investment':
-        return {
-          label: 'Inversión',
-          className: 'bg-purple-100 text-purple-800'
-        };
-      default:
-        return {
-          label: type,
-          className: 'bg-gray-100 text-gray-800'
-        };
-    }
-  };
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Repeat } from 'lucide-react';
@@ -36,6 +6,7 @@ import { useAccounts } from '../hooks/useAccounts';
 import { Navbar } from "../components/navbar/Navbar";
 import { useCategories } from '../hooks/useCategories';
 import { useTransactions } from '../hooks/useTransactions';
+import { getTransactionTypeDisplay } from '../utils/getTransactionTypeDisplay';
 
 const Transactions = () => {
   const {
@@ -60,6 +31,11 @@ const Transactions = () => {
   const getCategoryIcon = (categoryId: string) => {
     const category = categories.find((cat) => String(cat.id) === String(categoryId));
     return category ? category.icon : null;
+  };
+
+  const getCategoryColor = (categoryId: string) => {
+    const category = categories.find((cat) => String(cat.id) === String(categoryId));
+    return category ? category.color : 'bg-gray-100 text-gray-800';
   };
 
   const getAccountName = (accountId: string) => {
@@ -581,7 +557,7 @@ const Transactions = () => {
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 flex-1">
-                          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                          <div style={{ backgroundColor: getCategoryColor(transaction.categoryId) }} className="w-12 h-12 rounded-full flex items-center justify-center text-white">
                             {getIconSVG(getCategoryIcon(transaction.categoryId) || 'tag')}
                           </div>
                           <div className="flex-1 min-w-0">
