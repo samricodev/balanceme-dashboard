@@ -1,6 +1,37 @@
+  // Función para mostrar nombre y color según el tipo de transacción
+  const getTransactionTypeDisplay = (type: string) => {
+    switch (type) {
+      case 'income':
+        return {
+          label: 'Ingreso',
+          className: 'bg-green-100 text-green-800'
+        };
+      case 'expense':
+        return {
+          label: 'Gasto',
+          className: 'bg-red-100 text-red-800'
+        };
+      case 'saving':
+        return {
+          label: 'Ahorro',
+          className: 'bg-blue-100 text-blue-800'
+        };
+      case 'investment':
+        return {
+          label: 'Inversión',
+          className: 'bg-purple-100 text-purple-800'
+        };
+      default:
+        return {
+          label: type,
+          className: 'bg-gray-100 text-gray-800'
+        };
+    }
+  };
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Repeat } from 'lucide-react';
+import { TransactionTypes } from '../utils/enums';
 import { useAccounts } from '../hooks/useAccounts';
 import { Navbar } from "../components/navbar/Navbar";
 import { useCategories } from '../hooks/useCategories';
@@ -106,9 +137,12 @@ const Transactions = () => {
     } else if (transaction.type === 'expense') {
       color = 'text-red-600';
       display = `-${formatCurrency(Math.abs(transaction.amount), transaction.currency)}`;
-    } else {
+    } else if (transaction.type === 'saving') {
       color = 'text-blue-600';
-      display = formatCurrency(Math.abs(transaction.amount), transaction.currency);
+      display = `+${formatCurrency(Math.abs(transaction.amount), transaction.currency)}`;
+    } else if (transaction.type === 'investment') {
+      color = 'text-purple-600';
+      display = `+${formatCurrency(Math.abs(transaction.amount), transaction.currency)}`;
     }
     return { color, display };
   };
@@ -179,7 +213,8 @@ const Transactions = () => {
 
   const totalIncome = safeTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
   const totalExpense = safeTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + Math.abs(t.amount), 0);
-  const netBalance = totalIncome - totalExpense;
+  const totalGrowth = safeTransactions.filter(t => t.type === 'saving' || t.type === 'investment').reduce((sum, t) => sum + t.amount, 0);
+  const netBalance = (totalIncome + totalGrowth) - totalExpense;
 
   if (loading) {
     return (
@@ -189,7 +224,7 @@ const Transactions = () => {
           <div className="max-w-6xl mx-auto flex items-center justify-center min-h-[60vh]">
             <div className="flex flex-col items-center space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-              <p className="text-gray-600 font-medium">Cargando tus transacciones...</p>
+              <p className="text-gray-600 font-medium">Cargando tus movimientos...</p>
             </div>
           </div>
         </div>
@@ -212,7 +247,7 @@ const Transactions = () => {
                     <Repeat size={32} color='indigo' />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold text-white">Mis Transacciones</h1>
+                    <h1 className="text-3xl font-bold text-white">Mis Movimientos</h1>
                     <p className="text-indigo-100">Historial completo de movimientos</p>
                   </div>
                 </div>
@@ -221,7 +256,7 @@ const Transactions = () => {
                   <p className={`text-3xl font-bold ${netBalance >= 0 ? 'text-white' : 'text-red-200'}`}>
                     {formatCurrency(netBalance)}
                   </p>
-                  <p className="text-sm text-indigo-100">{transactions.length} transacciones</p>
+                  <p className="text-sm text-indigo-100">{transactions.length} movimientos</p>
                 </div>
               </div>
             </div>
@@ -265,8 +300,8 @@ const Transactions = () => {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-blue-700 font-medium">Transacciones</p>
-                      <p className="text-xl font-bold text-blue-800">{transactions.length}</p>
+                      <p className="text-sm text-blue-700 font-medium">Crecimiento</p>
+                      <p className="text-xl font-bold text-blue-800">{formatCurrency(totalGrowth)}</p>
                     </div>
                   </div>
                 </div>
@@ -283,7 +318,7 @@ const Transactions = () => {
                   <input
                     name="search"
                     type="text"
-                    placeholder="Buscar transacciones..."
+                    placeholder="Buscar movimientos..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -299,9 +334,11 @@ const Transactions = () => {
                     className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   >
                     <option value="all">Todos los tipos</option>
-                    <option value="income">Ingresos</option>
-                    <option value="expense">Gastos</option>
-                    <option value="transfer">Transferencias</option>
+                    {Object.entries(TransactionTypes).map(([key, value]) => (
+                      <option key={key} value={value}>
+                        {key}
+                      </option>
+                    ))}
                   </select>
 
                   <select
@@ -327,7 +364,7 @@ const Transactions = () => {
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <span>Nueva Transacción</span>
+                <span>Nuevo Movimiento</span>
               </button>
             </div>
           </div>
@@ -342,7 +379,7 @@ const Transactions = () => {
                       <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
-                      <span>Nueva Transacción</span>
+                      <span>Nuevo Movimiento</span>
                     </h2>
                     <button
                       onClick={() => setShowCreateForm(false)}
@@ -400,9 +437,12 @@ const Transactions = () => {
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
-                      <option value="expense">Gasto</option>
-                      <option value="income">Ingreso</option>
-                      <option value="transfer">Transferencia</option>
+                      <option value="" disabled>Selecciona un tipo</option>
+                      {Object.entries(TransactionTypes).map(([key, value]) => (
+                        <option key={key} value={value}>
+                          {key}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -472,7 +512,7 @@ const Transactions = () => {
                       type="submit"
                       className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                     >
-                      Crear Transacción
+                      Crear Movimiento
                     </button>
                     <button
                       type="button"
@@ -497,7 +537,7 @@ const Transactions = () => {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-medium text-red-800">Error al cargar las transacciones</h3>
+                  <h3 className="text-sm font-medium text-red-800">Error al cargar los movimientos</h3>
                   <p className="text-sm text-red-700 mt-1">{error}</p>
                 </div>
                 <button
@@ -510,24 +550,24 @@ const Transactions = () => {
             </div>
           )}
 
-          {/* Lista de transacciones */}
+          {/* Lista de movimientos */}
           {!error && (
             filteredTransactions.length === 0 ? (
               <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
                 <div className="text-center py-16">
                   <Repeat size={72} className="mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-xl font-medium text-gray-900 mb-2">No hay transacciones</h3>
+                  <h3 className="text-xl font-medium text-gray-900 mb-2">No hay movimientos</h3>
                   <p className="text-gray-500 mb-6">
                     {searchTerm || filterType !== 'all' || filterCategory !== 'all'
-                      ? 'No se encontraron transacciones con los filtros aplicados'
-                      : 'Comienza registrando tu primera transacción'
+                      ? 'No se encontraron movimientos con los filtros aplicados'
+                      : 'Comienza registrando tu primer movimiento'
                     }
                   </p>
                   <button
                     onClick={() => setShowCreateForm(true)}
                     className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                   >
-                    Crear Primera Transacción
+                    Crear Primer Movimiento
                   </button>
                 </div>
               </div>
@@ -564,18 +604,9 @@ const Transactions = () => {
                             {getAmountDisplay(transaction).display}
                           </p>
                           <span
-                            className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-1 ${transaction.type === 'income'
-                                ? 'bg-green-100 text-green-800'
-                                : transaction.type === 'expense'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-blue-100 text-blue-800'
-                              }`}
+                            className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-1 ${getTransactionTypeDisplay(transaction.type).className}`}
                           >
-                            {transaction.type === 'income'
-                              ? 'Ingreso'
-                              : transaction.type === 'expense'
-                                ? 'Gasto'
-                                : 'Transferencia'}
+                            {getTransactionTypeDisplay(transaction.type).label}
                           </span>
                         </div>
                       </div>
@@ -586,7 +617,7 @@ const Transactions = () => {
                 {/* Paginación o información adicional */}
                 <div className="bg-gray-50 p-4 border-t border-gray-200">
                   <p className="text-sm text-gray-600 text-center">
-                    Mostrando {filteredTransactions.length} de {transactions.length} transacciones
+                    Mostrando {filteredTransactions.length} de {transactions.length} movimientos
                   </p>
                 </div>
               </div>

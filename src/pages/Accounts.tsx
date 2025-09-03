@@ -345,7 +345,6 @@ const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
                       </span>
                     </div>
                     <h2 className="text-xl font-bold text-gray-900 mb-1">{account.name}</h2>
-                    <p className="text-sm text-gray-500">#{account.id}</p>
                   </div>
 
                   {/* Contenido de la tarjeta */}
