@@ -55,7 +55,7 @@ export const Navbar = () => {
                 to="/transacciones"
                 className="flex items-center gap-2 text-gray-800 hover:text-gray-600 px-3 py-2 rounded-md text-sm font-medium"
               >
-                <Repeat size={18} /> Transacciones
+                <Repeat size={18} /> Movimientos
               </NavLink>
               <NavLink
                 to="/categorias"

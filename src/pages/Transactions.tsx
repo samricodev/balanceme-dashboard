@@ -67,7 +67,7 @@ const Transactions = () => {
       categoryId: formData.categoryId,
       note: formData.note,
       amount: parseFloat(formData.amount),
-      type: formData.type as 'income' | 'expense' | 'transfer',
+      type: formData.type as 'income' | 'expense' | 'saving' | 'investment',
       date: formData.date
     });
 

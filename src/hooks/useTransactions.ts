@@ -11,7 +11,7 @@ interface CreateTransactionData {
   categoryId: string;
   note: string;
   amount: number;
-  type: 'income' | 'expense' | 'transfer';
+  type: 'income' | 'expense' | 'saving' | 'investment';
   date: string;
 }
 
@@ -22,7 +22,7 @@ interface UpdateTransactionData {
   categoryId: string;
   note: string;
   amount: number;
-  type: 'income' | 'expense' | 'transfer';
+  type: 'income' | 'expense' | 'saving' | 'investment';
   date: string;
 }
 

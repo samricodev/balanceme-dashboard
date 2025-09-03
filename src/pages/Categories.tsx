@@ -213,13 +213,13 @@ const Categories = () => {
                   </div>
                   <div>
                     <h1 className="text-3xl font-bold text-white">Mis Categorías</h1>
-                    <p className="text-indigo-100">Organiza tus transacciones por categorías</p>
+                    <p className="text-indigo-100">Organiza tus movimientos por categorías</p>
                   </div>
                 </div>
                 <div className="text-right text-white">
                   <p className="text-sm text-indigo-100 mb-1">Total de Categorías</p>
                   <p className="text-3xl font-bold">{totalCategories}</p>
-                  <p className="text-sm text-indigo-100">{isNaN(totalTransactions) ? 0 : totalTransactions} transacciones</p>
+                  <p className="text-sm text-indigo-100">{isNaN(totalTransactions) ? 0 : totalTransactions} movimientos</p>
                 </div>
               </div>
             </div>
@@ -486,7 +486,7 @@ const Categories = () => {
                 <p className="text-gray-500 mb-6">
                   {searchTerm || filterType !== 'all'
                     ? 'No se encontraron categorías con los filtros aplicados'
-                    : 'Comienza creando tu primera categoría para organizar tus transacciones'
+                    : 'Comienza creando tu primera categoría para organizar tus movimientos'
                   }
                 </p>
                 <button
@@ -556,11 +556,11 @@ const Categories = () => {
                           <p className="text-2xl font-bold text-gray-900">
                             {category.transactionCount}
                           </p>
-                          <p className="text-sm text-gray-500">Transacciones</p>
+                          <p className="text-sm text-gray-500">Movimientos</p>
                         </div>
                         <div className="text-center">
                           <p className="text-lg font-bold text-gray-900">
-                            {formatCurrency(category.totalAmount)}
+                            {formatCurrency(Math.abs(category.totalAmount))}
                           </p>
                           <p className="text-sm text-gray-500">Total</p>
                         </div>
@@ -580,7 +580,7 @@ const Categories = () => {
                       {/* Botones de acción */}
                       <div className="pt-2 space-y-2">
                         <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 px-4 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg text-sm">
-                          Ver Transacciones
+                          Ver Movimientos
                         </button>
                         <button
                           onClick={() => handleEditCategory(category)}
