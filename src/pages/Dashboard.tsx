@@ -1,66 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, ReactPortal, JSXElementConstructor, Key, ReactElement, ReactNode } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import { Navbar } from '../components/navbar/Navbar';
-
-// Mock data para el dashboard
-const mockDashboardData = {
-  accounts: [
-    { id: 'ACC001', name: 'Cuenta de Ahorro', type: 'ahorro', currency: 'MXN', balance: 25750.50 },
-    { id: 'ACC002', name: 'Cuenta Corriente', type: 'corriente', currency: 'MXN', balance: 148200.00 },
-    { id: 'ACC003', name: 'Tarjeta de Crédito', type: 'credito', currency: 'MXN', balance: -12300.75 },
-    { id: 'ACC004', name: 'Inversión USD', type: 'inversion', currency: 'USD', balance: 5420.30 }
-  ],
-
-  monthlyData: [
-    { month: 'Mar', ingresos: 45000, gastos: 32000, balance: 13000 },
-    { month: 'Abr', ingresos: 47000, gastos: 35000, balance: 12000 },
-    { month: 'May', ingresos: 46000, gastos: 31000, balance: 15000 },
-    { month: 'Jun', ingresos: 48000, gastos: 36000, balance: 12000 },
-    { month: 'Jul', ingresos: 49000, gastos: 33000, balance: 16000 },
-    { month: 'Ago', ingresos: 51000, gastos: 38000, balance: 13000 }
-  ],
-
-  expenses: [
-    { category: 'Alimentación', amount: 8500, color: '#FF8042', percentage: 28 },
-    { category: 'Transporte', amount: 4200, color: '#8884D8', percentage: 14 },
-    { category: 'Compras', amount: 5800, color: '#00C49F', percentage: 19 },
-    { category: 'Servicios', amount: 3200, color: '#FFBB28', percentage: 11 },
-    { category: 'Entretenimiento', amount: 2800, color: '#FF6B6B', percentage: 9 },
-    { category: 'Otros', amount: 5500, color: '#95A5A6', percentage: 19 }
-  ],
-
-  recentTransactions: [
-    { id: 1, description: 'Transferencia Nómina', amount: 15000, date: '2025-08-25', type: 'income' },
-    { id: 2, description: 'Supermercado Soriana', amount: -850, date: '2025-08-24', type: 'expense' },
-    { id: 3, description: 'Gasolinera Shell', amount: -650, date: '2025-08-24', type: 'expense' },
-    { id: 4, description: 'Depósito Cliente ABC', amount: 8500, date: '2025-08-23', type: 'income' },
-    { id: 5, description: 'Netflix Suscripción', amount: -299, date: '2025-08-23', type: 'expense' }
-  ],
-
-  goals: [
-    { id: 1, name: 'Vacaciones Europa', target: 50000, current: 32500, progress: 65 },
-    { id: 2, name: 'Fondo de Emergencia', target: 100000, current: 78000, progress: 78 },
-    { id: 3, name: 'Auto Nuevo', target: 300000, current: 125000, progress: 42 }
-  ]
-};
-
-type DashboardData = typeof mockDashboardData;
+import { useDashboard } from '../hooks/useDashboard';
+import { ValueType } from 'recharts/types/component/DefaultTooltipContent';
+import { ReactPortal, JSXElementConstructor, Key, ReactElement, ReactNode } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { NavLink } from 'react-router-dom';
 
 const Dashboard = () => {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simular carga de datos
-    const timer = setTimeout(() => {
-      setData(mockDashboardData);
-      setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const {
+    totalBalance,
+    totalIncome,
+    totalExpenses,
+    totalSavings,
+    expenses,
+    recentTransactions,
+    monthlyData,
+    goals,
+    loading,
+  } = useDashboard();
 
   const formatCurrency = (amount: bigint | ValueType, currency = 'MXN') => {
     let numericAmount: number | bigint = 0;
@@ -78,19 +35,7 @@ const Dashboard = () => {
     }).format(numericAmount);
   };
 
-  const totalBalance = data?.accounts?.reduce((sum: number, account: { currency: string; balance: number; }) => {
-    if (account.currency === 'MXN') {
-      return sum + account.balance;
-    } else if (account.currency === 'USD') {
-      return sum + (account.balance * 18); // Conversión aproximada
-    }
-    return sum;
-  }, 0) || 0;
-
-  const totalIncome = data?.monthlyData?.[5]?.ingresos || 0;
-  const totalExpenses = data?.monthlyData?.[5]?.gastos || 0;
-
-  if (loading || !data) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100">
         <div className="flex items-center justify-center min-h-screen">
@@ -162,7 +107,7 @@ const Dashboard = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Ahorro este mes</p>
-                  <p className="text-2xl font-bold text-blue-600">{formatCurrency(totalIncome - totalExpenses)}</p>
+                  <p className="text-2xl font-bold text-blue-600">{formatCurrency(totalSavings)}</p>
                   <p className="text-xs text-blue-500">↑ Muy bien! 💪</p>
                 </div>
                 <div className="bg-blue-100 p-3 rounded-full">
@@ -185,7 +130,7 @@ const Dashboard = () => {
                 <span>Flujo de Efectivo</span>
               </h3>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={data.monthlyData}>
+                <LineChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
@@ -209,7 +154,7 @@ const Dashboard = () => {
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={data.expenses}
+                    data={expenses}
                     cx="50%"
                     cy="50%"
                     outerRadius={100}
@@ -217,7 +162,7 @@ const Dashboard = () => {
                     dataKey="amount"
                     label={({ category, percentage }) => `${category} ${percentage}%`}
                   >
-                    {data.expenses.map((entry: { color: string | undefined; }, index: any) => (
+                    {expenses.map((entry: { color: string | undefined; }, index: any) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -237,12 +182,12 @@ const Dashboard = () => {
                   </svg>
                   <span>Transacciones Recientes</span>
                 </div>
-                <button className="text-indigo-600 hover:text-indigo-800 text-sm font-semibold">
+                <NavLink to="/transacciones" className="text-indigo-600 hover:text-indigo-800 text-sm font-semibold">
                   Ver todas
-                </button>
+                </NavLink>
               </h3>
               <div className="space-y-4">
-                {data.recentTransactions.map((transaction: { id: Key | null | undefined; type: string; description: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; date: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; amount: number; }) => (
+                {recentTransactions.map(transaction => (
                   <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                     <div className="flex items-center space-x-3">
                       <div className={`p-2 rounded-full ${transaction.type === 'income' ? 'bg-green-100' : 'bg-red-100'}`}>
@@ -255,7 +200,7 @@ const Dashboard = () => {
                         </svg>
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-800">{transaction.description}</p>
+                        <p className="font-semibold text-gray-800">{transaction.note}</p>
                         <p className="text-xs text-gray-500">{transaction.date}</p>
                       </div>
                     </div>
@@ -276,7 +221,7 @@ const Dashboard = () => {
                 <span>Metas de Ahorro</span>
               </h3>
               <div className="space-y-4">
-                {data.goals.map((goal: { id: Key | null | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; progress: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; current: any; target: any; }) => (
+                {goals.map((goal: { id: Key | null | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; progress: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; current: any; target: any; }) => (
                   <div key={goal.id} className="bg-gray-50 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-semibold text-gray-800">{goal.name}</h4>
