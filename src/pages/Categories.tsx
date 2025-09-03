@@ -1,6 +1,37 @@
+  // Función para mostrar nombre y color según el tipo de categoría
+  const getCategoryTypeDisplay = (type: string) => {
+    switch (type) {
+      case 'income':
+        return {
+          label: 'Ingreso',
+          className: 'bg-green-100 text-green-800 border border-green-200'
+        };
+      case 'expense':
+        return {
+          label: 'Gasto',
+          className: 'bg-red-100 text-red-800 border border-red-200'
+        };
+      case 'saving':
+        return {
+          label: 'Ahorro',
+          className: 'bg-blue-100 text-blue-800 border border-blue-200'
+        };
+      case 'investment':
+        return {
+          label: 'Inversión',
+          className: 'bg-purple-100 text-purple-800 border border-purple-200'
+        };
+      default:
+        return {
+          label: type,
+          className: 'bg-gray-100 text-gray-800 border border-gray-200'
+        };
+    }
+  };
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Tags } from 'lucide-react';
+import { CategoryTypes } from '../utils/enums';
 import { Category } from '../types/category.type';
 import { Navbar } from "../components/navbar/Navbar";
 import { useCategories } from '../hooks/useCategories';
@@ -177,6 +208,7 @@ const Categories = () => {
   const totalCategories = categories.length;
   const incomeCategories = categories.filter(cat => cat.type === 'income').length;
   const expenseCategories = categories.filter(cat => cat.type === 'expense').length;
+  const growthCategories = categories.filter(cat => cat.type === 'saving' || cat.type === 'investment').length;
   const totalTransactions = categories.reduce((sum, cat) => sum + cat.transactionCount, 0);
 
   if (loading) {
@@ -256,13 +288,13 @@ const Categories = () => {
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 8h6m-6 4h6" />
+                      <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-blue-700 font-medium">Total Transacciones</p>
-                      <p className="text-xl font-bold text-blue-800">{isNaN(totalTransactions) ? 0 : totalTransactions}</p>
+                      <p className="text-sm text-blue-700 font-medium">Categorías de Crecimiento</p>
+                      <p className="text-xl font-bold text-blue-800">{growthCategories}</p>
                     </div>
                   </div>
                 </div>
@@ -295,8 +327,11 @@ const Categories = () => {
                     className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   >
                     <option value="all">Todas las categorías</option>
-                    <option value="income">Solo Ingresos</option>
-                    <option value="expense">Solo Gastos</option>
+                    {Object.entries(CategoryTypes).map(([key, value]) => (
+                      <option key={key} value={value}>
+                        {key}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -362,8 +397,11 @@ const Categories = () => {
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
-                      <option value="expense">Gasto</option>
-                      <option value="income">Ingreso</option>
+                      {Object.entries(CategoryTypes).map(([label, value]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -527,11 +565,10 @@ const Categories = () => {
 
                     <div className="mb-3">
                       <h2 className="text-xl font-bold text-gray-900 mb-1">{category.name}</h2>
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${category.type === 'income'
-                        ? 'bg-green-100 text-green-800 border border-green-200'
-                        : 'bg-red-100 text-red-800 border border-red-200'
-                        }`}>
-                        {category.type === 'income' ? 'Ingreso' : 'Gasto'}
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getCategoryTypeDisplay(category.type).className}`}
+                      >
+                        {getCategoryTypeDisplay(category.type).label}
                       </span>
                     </div>
 

@@ -3,6 +3,7 @@ import { API_URL } from "../config/config";
 import { Category } from "../types/category.type";
 import { getAuthHeaders } from "../utils/getHeaders";
 import { useState, useEffect, useCallback } from "react";
+import { handleApiError } from "../utils/handleApiError";
 
 interface CreateCategoryData {
   userId: string;
@@ -26,19 +27,6 @@ export const useCategories = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const url = `${API_URL}/categories`;
-
-  // Función auxiliar para manejar errores de respuesta
-  const handleApiError = async (response: Response): Promise<string> => {
-    if (!response.ok) {
-      try {
-        const errorData = await response.json();
-        return errorData.message || `Error ${response.status}: ${response.statusText}`;
-      } catch {
-        return `Error ${response.status}: ${response.statusText}`;
-      }
-    }
-    return '';
-  };
 
   const fetchCategories = useCallback(async (): Promise<void> => {
     setLoading(true);
