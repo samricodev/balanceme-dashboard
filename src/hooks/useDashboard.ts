@@ -84,7 +84,7 @@ export const useDashboard = () => {
     id: tx.id,
     note: tx.note,
     amount: tx.amount,
-    date: new Date(tx.date).toLocaleDateString(),
+    date: new Date(tx.date).toDateString(),
     type: tx.type as 'income' | 'expense' | 'saving' | 'investment'
   })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
 

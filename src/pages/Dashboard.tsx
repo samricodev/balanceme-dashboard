@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { NavLink } from 'react-router-dom';
 import { Navbar } from '../components/navbar/Navbar';
 import { useDashboard } from '../hooks/useDashboard';
 import { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import { ReactPortal, JSXElementConstructor, Key, ReactElement, ReactNode } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { NavLink } from 'react-router-dom';
 
 const Dashboard = () => {
   const {
@@ -35,6 +35,102 @@ const Dashboard = () => {
     }).format(numericAmount);
   };
 
+  const formatDate = (date: string | Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('es-MX', options);
+  };
+
+  const formatColorTransaction = (type: 'income' | 'expense' | 'saving' | 'investment') => {
+    switch (type) {
+      case 'income':
+        return 'text-green-600';
+      case 'expense':
+        return 'text-red-600';
+      case 'saving':
+        return 'text-blue-600';
+      case 'investment':
+        return 'text-purple-600';
+      default:
+        return 'text-gray-600';
+    }
+  };
+
+  const formatIconTransaction = (type: 'income' | 'expense' | 'saving' | 'investment') => {
+    switch (type) {
+      case 'income':
+        // Flecha hacia abajo (entrada de dinero)
+        return (
+          <div className="p-2 rounded-full bg-green-100">
+            <svg
+              className="w-5 h-5 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m0 0l-6-6m6 6l6-6" />
+            </svg>
+          </div>
+        );
+
+      case 'expense':
+        // Flecha hacia arriba (salida de dinero)
+        return (
+          <div className="p-2 rounded-full bg-red-100">
+            <svg
+              className="w-5 h-5 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 20V4m0 0l-6 6m6-6l6 6" />
+            </svg>
+          </div>
+        );
+
+      case 'saving':
+        // Ícono tipo alcancía (círculo con moneda entrando)
+        return (
+          <div className="p-2 rounded-full bg-blue-100">
+            <svg
+              className="w-5 h-5 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="12" r="9" stroke="currentColor" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l3 2" />
+            </svg>
+          </div>
+        );
+
+      case 'investment':
+        // Gráfica ascendente (línea con tendencia hacia arriba)
+        return (
+          <div className="p-2 rounded-full bg-purple-100">
+            <svg
+              className="w-5 h-5 text-purple-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.2}
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 17l6-6 4 4 8-8" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21H3V3" />
+            </svg>
+          </div>
+        );
+    }
+  };
+
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100">
@@ -60,7 +156,7 @@ const Dashboard = () => {
                 ¡Bienvenido de vuelta! 👋
               </h1>
               <p className="text-xl text-indigo-100 mb-8">
-                Aquí tienes un resumen de tus finanzas al {new Date().toLocaleDateString('es-MX')}
+                Aquí tienes un resumen de tus finanzas al {formatDate(new Date())}
               </p>
               <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto">
                 <p className="text-indigo-100 text-sm mb-2">Patrimonio Total</p>
@@ -78,7 +174,7 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Ingresos este mes</p>
                   <p className="text-2xl font-bold text-green-600">{formatCurrency(totalIncome)}</p>
-                  <p className="text-xs text-green-500">↑ +5.2% vs mes anterior</p>
+                  <p className="text-xs text-green-500">{totalIncome === 0 ? 'No hay ingresos' : '↑ +5.2% vs mes anterior'}</p>
                 </div>
                 <div className="bg-green-100 p-3 rounded-full">
                   <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,7 +189,7 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Gastos este mes</p>
                   <p className="text-2xl font-bold text-red-600">{formatCurrency(totalExpenses)}</p>
-                  <p className="text-xs text-red-500">↑ +2.1% vs mes anterior</p>
+                  <p className="text-xs text-red-500">{totalExpenses === 0 ? 'No hay gastos' : '↑ +2.1% vs mes anterior'}</p>
                 </div>
                 <div className="bg-red-100 p-3 rounded-full">
                   <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +204,7 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Ahorro este mes</p>
                   <p className="text-2xl font-bold text-blue-600">{formatCurrency(totalSavings)}</p>
-                  <p className="text-xs text-blue-500">↑ Muy bien! 💪</p>
+                  <p className="text-xs text-blue-500">{totalSavings === 0 ? 'No hay ahorro' : '↑ Muy bien! 💪'}</p>
                 </div>
                 <div className="bg-blue-100 p-3 rounded-full">
                   <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,21 +286,13 @@ const Dashboard = () => {
                 {recentTransactions.map(transaction => (
                   <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-full ${transaction.type === 'income' ? 'bg-green-100' : 'bg-red-100'}`}>
-                        <svg className={`w-4 h-4 ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          {transaction.type === 'income' ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
-                          ) : (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 13l-5 5m0 0l-5-5m5 5V6" />
-                          )}
-                        </svg>
-                      </div>
+                      {formatIconTransaction(transaction.type)}
                       <div>
                         <p className="font-semibold text-gray-800">{transaction.note}</p>
-                        <p className="text-xs text-gray-500">{transaction.date}</p>
+                        <p className="text-xs text-gray-500">{formatDate(transaction.date)}</p>
                       </div>
                     </div>
-                    <p className={`font-bold ${transaction.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className={`font-bold ${formatColorTransaction(transaction.type)}`}>
                       {formatCurrency(transaction.amount)}
                     </p>
                   </div>
