@@ -89,15 +89,14 @@ export const useDashboard = () => {
   })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
 
   const goals: goalType[] = (accountsData?.accounts || [])
-  .filter(acc => acc.type?.toLowerCase() === 'saving')
-  .map(acc => ({
-    id: acc.id,
-    name: acc.name,
-    target: acc.balance * 2,
-    current: acc.balance,
-    progress: (acc.balance / (acc.balance * 2)) * 100
-  }));
-
+    .filter(acc => ['saving', 'ahorro'].includes(acc.type?.toLowerCase?.()))
+    .map(acc => ({
+      id: acc.id,
+      name: acc.name,
+      target: acc.balance * 2,
+      current: acc.balance,
+      progress: (acc.balance / (acc.balance * 2)) * 100
+    }));
 
   return {
     totalBalance,
