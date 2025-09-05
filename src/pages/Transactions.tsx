@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Repeat } from 'lucide-react';
+import { Repeat, Shield } from 'lucide-react';
 import { TransactionTypes } from '../utils/enums';
 import { useAccounts } from '../hooks/useAccounts';
 import { Navbar } from "../components/navbar/Navbar";
 import { useCategories } from '../hooks/useCategories';
 import { useTransactions } from '../hooks/useTransactions';
 import { getTransactionTypeDisplay } from '../utils/getTransactionTypeDisplay';
+import { useNavigate } from 'react-router-dom';
 
 const Transactions = () => {
   const {
@@ -22,6 +23,7 @@ const Transactions = () => {
   const [filterType, setFilterType] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   const getCategoryName = (categoryId: string) => {
     const category = categories.find((cat) => String(cat.id) === String(categoryId));
@@ -201,6 +203,33 @@ const Transactions = () => {
             <div className="flex flex-col items-center space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
               <p className="text-gray-600 font-medium">Cargando tus movimientos...</p>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="bg-white p-8 rounded-2xl shadow-xl border border-red-200 max-w-md mx-4">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="bg-red-100 p-3 rounded-full">
+                  <Shield className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Error al cargar</h3>
+              </div>
+              <p className="text-gray-600 mb-6 text-center">No se pudo cargar la información de los movimientos</p>
+              <button
+                onClick={() => navigate("/")}
+                className="w-full bg-red-600 text-white py-3 px-6 rounded-xl hover:bg-red-700 transition-colors font-semibold"
+              >
+                Refrescar Sesión
+              </button>
             </div>
           </div>
         </div>
@@ -503,29 +532,6 @@ const Transactions = () => {
             </div>
           )}
 
-          {/* Mensaje de error */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
-              <div className="flex items-center space-x-3">
-                <div className="bg-red-100 p-2 rounded-full">
-                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-sm font-medium text-red-800">Error al cargar los movimientos</h3>
-                  <p className="text-sm text-red-700 mt-1">{error}</p>
-                </div>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="bg-red-600 text-white text-sm py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  Reintentar
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* Lista de movimientos */}
           {!error && (
             filteredTransactions.length === 0 ? (
@@ -589,16 +595,17 @@ const Transactions = () => {
                     </div>
                   ))}
                 </div>
-
-                {/* Paginación o información adicional */}
-                <div className="bg-gray-50 p-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 text-center">
-                    Mostrando {filteredTransactions.length} de {transactions.length} movimientos
-                  </p>
-                </div>
               </div>
+
             )
+
           )}
+          {/* Paginación o información adicional */}
+          <div className="bg-gray-50 p-4 border-t border-gray-200">
+            <p className="text-sm text-gray-600 text-center">
+              Mostrando {filteredTransactions.length} de {transactions.length} movimientos
+            </p>
+          </div>
         </div>
       </div>
     </>

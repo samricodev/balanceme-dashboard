@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Wallet } from 'lucide-react';
+import { Wallet, Shield } from 'lucide-react';
 import { useAccounts } from "../hooks/useAccounts";
 import { Navbar } from "../components/navbar/Navbar";
+import { useNavigate } from 'react-router-dom';
 
 const Accounts = () => {
   const {
-  accounts,
-  loading,
-  error,
-  createAccount,
-} = useAccounts();
+    accounts,
+    loading,
+    error,
+    createAccount,
+  } = useAccounts();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -19,6 +20,7 @@ const Accounts = () => {
     balance: 0
   });
 
+  const navigate = useNavigate();
 
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     setFormData({
@@ -27,30 +29,30 @@ const Accounts = () => {
     });
   };
 
-const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const result = await createAccount({
-    userId: localStorage.getItem('userId') || '',
-    name: formData.name,
-    type: formData.type,
-    currency: formData.currency,
-    balance: Number(formData.balance) || 0
-  });
-
-  if (result.success) {
-    // Éxito - cerrar formulario, etc.
-    setFormData({
-      name: '',
-      type: 'ahorro',
-      currency: 'MXN',
-      balance: 0
+  const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const result = await createAccount({
+      userId: localStorage.getItem('userId') || '',
+      name: formData.name,
+      type: formData.type,
+      currency: formData.currency,
+      balance: Number(formData.balance) || 0
     });
-    setShowCreateForm(false);
-  } else {
-    // Error ya está en el estado del hook
-    console.error('Error:', result.error);
-  }
-};
+
+    if (result.success) {
+      // Éxito - cerrar formulario, etc.
+      setFormData({
+        name: '',
+        type: 'ahorro',
+        currency: 'MXN',
+        balance: 0
+      });
+      setShowCreateForm(false);
+    } else {
+      // Error ya está en el estado del hook
+      console.error('Error:', result.error);
+    }
+  };
 
   // Función para formatear números como moneda
   const formatCurrency = (amount: number, currency: string) => {
@@ -63,7 +65,7 @@ const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
 
   // Función para obtener el color según el tipo de cuenta
   const getAccountTypeColor = (type: string) => {
-    switch(type?.toLowerCase()) {
+    switch (type?.toLowerCase()) {
       case 'ahorro':
       case 'savings':
         return 'bg-green-100 text-green-800 border-green-200';
@@ -83,7 +85,7 @@ const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
 
   // Función para obtener icono según tipo de cuenta
   const getAccountIcon = (type: string) => {
-    switch(type?.toLowerCase()) {
+    switch (type?.toLowerCase()) {
       case 'ahorro':
       case 'savings':
         return (
@@ -133,6 +135,33 @@ const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
             <div className="flex flex-col items-center space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
               <p className="text-gray-600 font-medium">Cargando tus cuentas...</p>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="bg-white p-8 rounded-2xl shadow-xl border border-red-200 max-w-md mx-4">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="bg-red-100 p-3 rounded-full">
+                  <Shield className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Error al cargar</h3>
+              </div>
+              <p className="text-gray-600 mb-6">No se pudo cargar la información de las cuentas</p>
+              <button
+                onClick={() => navigate("/")}
+                className="w-full bg-red-600 text-white py-3 px-6 rounded-xl hover:bg-red-700 transition-colors font-semibold"
+              >
+                Refrescar Sesión
+              </button>
             </div>
           </div>
         </div>
@@ -289,29 +318,6 @@ const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
             </div>
           )}
 
-          {/* Mensaje de error (sin romper el diseño) */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
-              <div className="flex items-center space-x-3">
-                <div className="bg-red-100 p-2 rounded-full">
-                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-sm font-medium text-red-800">Error al cargar las cuentas</h3>
-                  <p className="text-sm text-red-700 mt-1">{error}</p>
-                </div>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="bg-red-600 text-white text-sm py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  Reintentar
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* Cuentas */}
           {(!accounts || accounts.length === 0) && !error ? (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
@@ -396,6 +402,16 @@ const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
               ))}
             </div>
           ) : null}
+          {/* Footer informativo */}
+              {accounts.length > 0 && (
+                <div className="mt-8 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden p-6">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600">
+                      Mostrando {accounts.length} de {accounts.length} cuentas
+                    </p>
+                  </div>
+                </div>
+              )}
         </div>
       </div>
     </>
