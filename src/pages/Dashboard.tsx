@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NavLink } from 'react-router-dom';
+import { Shield } from 'lucide-react';
+import { NavLink, useNavigate} from 'react-router-dom';
 import { Navbar } from '../components/navbar/Navbar';
 import { useDashboard } from '../hooks/useDashboard';
 import { ValueType } from 'recharts/types/component/DefaultTooltipContent';
@@ -17,7 +18,9 @@ const Dashboard = () => {
     monthlyData,
     goals,
     loading,
+    error
   } = useDashboard();
+  const navigate = useNavigate();
 
   const formatCurrency = (amount: bigint | ValueType, currency = 'MXN') => {
     let numericAmount: number | bigint = 0;
@@ -141,6 +144,33 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="bg-white p-8 rounded-2xl shadow-xl border border-red-200 max-w-md mx-4">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="bg-red-100 p-3 rounded-full">
+                  <Shield className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Error al cargar</h3>
+              </div>
+              <p className="text-gray-600 mb-6">No se pudo cargar la información de las categorías</p>
+              <button
+                onClick={() => navigate("/")}
+                className="w-full bg-red-600 text-white py-3 px-6 rounded-xl hover:bg-red-700 transition-colors font-semibold"
+              >
+                Refrescar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 

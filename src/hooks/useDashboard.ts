@@ -37,6 +37,7 @@ export const useDashboard = () => {
   const categoriesData = useCategories();
   const transactionsData = useTransactions();
   const loading = !accountsData || !categoriesData || !transactionsData;
+  const error = transactionsData.error || categoriesData.error || accountsData.error;
 
   // Totals
   const totalBalance = accountsData.accounts.reduce((acc, account) => acc + account.balance, 0);
@@ -94,7 +95,7 @@ export const useDashboard = () => {
     .map(acc => ({
       id: acc.id,
       name: acc.name,
-      target: acc.balance * 2,
+      target: acc.balance + 1000 * 2,
       current: acc.balance + 1000,
       progress: (acc.balance + 1000) / (acc.balance + 1000 * 2) * 100
     }));
@@ -111,6 +112,7 @@ export const useDashboard = () => {
     expenses,
     recentTransactions,
     goals,
-    loading
+    loading,
+    error
   };
 };
