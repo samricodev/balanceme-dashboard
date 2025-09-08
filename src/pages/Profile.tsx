@@ -149,9 +149,12 @@ const Profile = () => {
                       <p className="text-xs text-gray-500">Recibir alertas por email</p>
                     </div>
                   </div>
-                  <div className="bg-green-500 w-12 h-6 rounded-full relative">
-                    <div className="bg-white w-5 h-5 rounded-full absolute top-0.5 right-0.5 shadow"></div>
-                  </div>
+                  {/* Switch moderno funcional */}
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" defaultChecked className="sr-only peer" />
+                    <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
+                    <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
+                  </label>
                 </div>
 
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
@@ -164,9 +167,11 @@ const Profile = () => {
                       <p className="text-xs text-gray-500">Seguridad adicional</p>
                     </div>
                   </div>
-                  <div className="bg-green-500 w-12 h-6 rounded-full relative">
-                    <div className="bg-white w-5 h-5 rounded-full absolute top-0.5 right-0.5 shadow"></div>
-                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" />
+                    <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
+                    <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
+                  </label>
                 </div>
 
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
@@ -179,9 +184,11 @@ const Profile = () => {
                       <p className="text-xs text-gray-500">Control de gastos</p>
                     </div>
                   </div>
-                  <div className="bg-gray-300 w-12 h-6 rounded-full relative">
-                    <div className="bg-white w-5 h-5 rounded-full absolute top-0.5 left-0.5 shadow"></div>
-                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" />
+                    <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
+                    <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
+                  </label>
                 </div>
               </div>
             </div>
