@@ -206,33 +206,6 @@ const Profile = () => {
               </button>
             </div>
           </div>
-
-          {/* Información de Seguridad */}
-          <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200">
-            <div className="flex items-start space-x-4">
-              <div className="bg-blue-100 p-3 rounded-full">
-                <Shield className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <h4 className="text-lg font-semibold text-blue-900 mb-2">Información de Seguridad</h4>
-                <p className="text-blue-700 text-sm mb-4">
-                  Tu información personal está protegida con encriptación de extremo a extremo.
-                  Nunca compartimos tus datos con terceros sin tu consentimiento explícito.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-blue-200 text-blue-800 text-xs font-semibold rounded-full">
-                    🔐 Encriptación AES-256
-                  </span>
-                  <span className="px-3 py-1 bg-green-200 text-green-800 text-xs font-semibold rounded-full">
-                    ✅ GDPR Compliant
-                  </span>
-                  <span className="px-3 py-1 bg-purple-200 text-purple-800 text-xs font-semibold rounded-full">
-                    🛡️ ISO 27001
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>
