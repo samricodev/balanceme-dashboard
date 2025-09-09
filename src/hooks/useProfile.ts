@@ -30,6 +30,31 @@ export const useProfile = () => {
     }
   };
 
+  const updateProfile = async (id: string, updatedData: Partial<Profile>) => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${url}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedData)
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setProfileData(data);
+    } catch (error) {
+      setError('Error updating profile');
+      console.error('Error updating profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const userId = localStorage.getItem('userId');
     if (userId) {
@@ -40,5 +65,5 @@ export const useProfile = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { profileData, loading, error };
+  return { profileData, updateProfile, loading, error };
 };
