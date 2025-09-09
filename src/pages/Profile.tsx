@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../hooks/useProfile";
 import { Navbar } from "../components/navbar/Navbar";
 import { User, Edit3, Lock, Mail, Shield, Settings, Bell, CreditCard } from "lucide-react";
 
 const Profile = () => {
-  const { profileData, loading, error } = useProfile();
+  const {
+    updateProfile,
+    profileData,
+    loading,
+    error
+  } = useProfile();
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId') ?? '';
 
   const [configurations, setConfigurations] = useState({
     enableNotifications: true,
@@ -15,19 +21,16 @@ const Profile = () => {
   });
 
   const toggleConfiguration = (
-    key: "enableNotifications" | "enable2FA" | "automaticLimits"
+    key: "enableNotifications" | "enable2FA" | "automaticLimits",
+    event?: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setConfigurations(
-      prev => ({
-        ...prev,
-        [key]: !prev[key]
-      })
-    );
+    event?.preventDefault();
+    setConfigurations(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+    updateProfile(userId, { [key]: !configurations[key] });
   };
-
-  useEffect(() => {
-    console.log('Configurations updated:', configurations);
-  }, [configurations]);
 
   if (loading) {
     return (

@@ -598,10 +598,9 @@ const Transactions = () => {
               </div>
 
             )
-
           )}
           {/* Paginación o información adicional */}
-          <div className="bg-gray-50 p-4 border-t border-gray-200">
+          <div className="bg-white rounded-2xl mt-4 p-6 border border-gray-100 overflow-hidden">
             <p className="text-sm text-gray-600 text-center">
               Mostrando {filteredTransactions.length} de {transactions.length} movimientos
             </p>
