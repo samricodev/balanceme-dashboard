@@ -1,11 +1,33 @@
-import { User, Edit3, Lock, Mail, Shield, Settings, Bell, CreditCard } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../hooks/useProfile";
 import { Navbar } from "../components/navbar/Navbar";
+import { User, Edit3, Lock, Mail, Shield, Settings, Bell, CreditCard } from "lucide-react";
 
 const Profile = () => {
   const { profileData, loading, error } = useProfile();
   const navigate = useNavigate();
+
+  const [configurations, setConfigurations] = useState({
+    enableNotifications: true,
+    enable2FA: false,
+    automaticLimits: true,
+  });
+
+  const toggleConfiguration = (
+    key: "enableNotifications" | "enable2FA" | "automaticLimits"
+  ) => {
+    setConfigurations(
+      prev => ({
+        ...prev,
+        [key]: !prev[key]
+      })
+    );
+  };
+
+  useEffect(() => {
+    console.log('Configurations updated:', configurations);
+  }, [configurations]);
 
   if (loading) {
     return (
@@ -151,7 +173,7 @@ const Profile = () => {
                   </div>
                   {/* Switch moderno funcional */}
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="sr-only peer" />
+                    <input type="checkbox" className="sr-only peer" checked={configurations.enableNotifications} onChange={() => toggleConfiguration("enableNotifications")} />
                     <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
                     <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
                   </label>
@@ -168,7 +190,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
+                    <input type="checkbox" className="sr-only peer" checked={configurations.enable2FA} onChange={() => toggleConfiguration("enable2FA")} />
                     <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
                     <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
                   </label>
@@ -185,7 +207,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
+                    <input type="checkbox" className="sr-only peer" checked={configurations.automaticLimits} onChange={() => toggleConfiguration("automaticLimits")} />
                     <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
                     <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
                   </label>
