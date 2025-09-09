@@ -160,7 +160,7 @@ const Dashboard = () => {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">Error al cargar</h3>
               </div>
-              <p className="text-gray-600 mb-6">No se pudo cargar la información de las categorías</p>
+              <p className="text-gray-600 mb-6">No se pudo cargar la información general</p>
               <button
                 onClick={() => navigate("/")}
                 className="w-full bg-red-600 text-white py-3 px-6 rounded-xl hover:bg-red-700 transition-colors font-semibold"
