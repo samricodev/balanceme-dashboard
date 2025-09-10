@@ -195,10 +195,10 @@ const Dashboard = () => {
                   <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                   </svg>
-                  <span>Transacciones Recientes</span>
+                  <span>Movimientos Recientes</span>
                 </div>
-                <NavLink to="/transacciones" className="text-indigo-600 hover:text-indigo-800 text-sm font-semibold">
-                  Ver todas
+                <NavLink to="/transacciones" reloadDocument className="text-indigo-600 hover:text-indigo-800 text-sm font-semibold">
+                  Ver todos
                 </NavLink>
               </h3>
               <div className="space-y-4">
@@ -254,12 +254,12 @@ const Dashboard = () => {
           <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
             <h3 className="text-xl font-bold text-gray-800 mb-6">Accesos Rápidos</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button className="flex flex-col items-center space-y-2 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200">
+              <NavLink to='/transacciones' reloadDocument className="flex flex-col items-center space-y-2 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200">
                 <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <span className="text-sm font-semibold text-blue-800">Nueva Transacción</span>
-              </button>
+                <span className="text-sm font-semibold text-blue-800">Nuevo Movimiento</span>
+              </NavLink>
 
               <button className="flex flex-col items-center space-y-2 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-200">
                 <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
