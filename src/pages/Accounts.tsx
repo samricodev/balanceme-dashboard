@@ -91,9 +91,8 @@ const Accounts = () => {
     if (confirm('¿Estás seguro de que deseas eliminar esta cuenta? Esta acción no se puede deshacer.')) {
       const result = await deleteAccount(accountId);
       if (result.success) {
-        // Éxito - actualizar estado, etc.
+        console.log('Cuenta eliminada');
       } else {
-        // Error ya está en el estado del hook
         console.error('Error:', result.error);
       }
     }

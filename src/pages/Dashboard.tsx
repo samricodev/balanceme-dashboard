@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Shield } from 'lucide-react';
-import { NavLink, useNavigate} from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/navbar/Navbar';
 import { useDashboard } from '../hooks/useDashboard';
-import { ValueType } from 'recharts/types/component/DefaultTooltipContent';
+import { formatIconTransaction } from '../utils/dashboard.util'
 import { ReactPortal, JSXElementConstructor, Key, ReactElement, ReactNode } from 'react';
+import { formatCurrency, formatDate, formatPercentage, formatColorTransaction } from '../utils/dashboard.utils';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const Dashboard = () => {
@@ -21,118 +22,6 @@ const Dashboard = () => {
     error
   } = useDashboard();
   const navigate = useNavigate();
-
-  const formatCurrency = (amount: bigint | ValueType, currency = 'MXN') => {
-    let numericAmount: number | bigint = 0;
-    if (typeof amount === 'number' || typeof amount === 'bigint') {
-      numericAmount = amount;
-    } else if (typeof amount === 'string') {
-      numericAmount = Number(amount);
-    } else if (Array.isArray(amount) && amount.length > 0 && (typeof amount[0] === 'number' || typeof amount[0] === 'string')) {
-      numericAmount = Number(amount[0]);
-    }
-    return new Intl.NumberFormat('es-MX', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 0
-    }).format(numericAmount);
-  };
-
-  const formatDate = (date: string | Date) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    };
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toLocaleDateString('es-MX', options);
-  };
-
-  const formatColorTransaction = (type: 'income' | 'expense' | 'saving' | 'investment') => {
-    switch (type) {
-      case 'income':
-        return 'text-green-600';
-      case 'expense':
-        return 'text-red-600';
-      case 'saving':
-        return 'text-blue-600';
-      case 'investment':
-        return 'text-purple-600';
-      default:
-        return 'text-gray-600';
-    }
-  };
-
-  const formatIconTransaction = (type: 'income' | 'expense' | 'saving' | 'investment') => {
-    switch (type) {
-      case 'income':
-        // Flecha hacia abajo (entrada de dinero)
-        return (
-          <div className="p-2 rounded-full bg-green-100">
-            <svg
-              className="w-5 h-5 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.2}
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m0 0l-6-6m6 6l6-6" />
-            </svg>
-          </div>
-        );
-
-      case 'expense':
-        // Flecha hacia arriba (salida de dinero)
-        return (
-          <div className="p-2 rounded-full bg-red-100">
-            <svg
-              className="w-5 h-5 text-red-600"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.2}
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 20V4m0 0l-6 6m6-6l6 6" />
-            </svg>
-          </div>
-        );
-
-      case 'saving':
-        // Ícono tipo alcancía (círculo con moneda entrando)
-        return (
-          <div className="p-2 rounded-full bg-blue-100">
-            <svg
-              className="w-5 h-5 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.2}
-              viewBox="0 0 24 24"
-            >
-              <circle cx="12" cy="12" r="9" stroke="currentColor" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l3 2" />
-            </svg>
-          </div>
-        );
-
-      case 'investment':
-        // Gráfica ascendente (línea con tendencia hacia arriba)
-        return (
-          <div className="p-2 rounded-full bg-purple-100">
-            <svg
-              className="w-5 h-5 text-purple-600"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.2}
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 17l6-6 4 4 8-8" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21H3V3" />
-            </svg>
-          </div>
-        );
-    }
-  };
-
 
   if (loading) {
     return (
@@ -343,7 +232,7 @@ const Dashboard = () => {
                   <div key={goal.id} className="bg-gray-50 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="font-semibold text-gray-800">{goal.name}</h4>
-                      <span className="text-sm font-bold text-indigo-600">{goal.progress}%</span>
+                      <span className="text-sm font-bold text-indigo-600">{formatPercentage(goal.progress)}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
                       <div
