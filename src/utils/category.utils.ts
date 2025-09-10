@@ -1,5 +1,13 @@
-// Función para mostrar nombre y color según el tipo de categoría
-export const getCategoryTypeDisplay = (type: string) => {
+
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+    minimumFractionDigits: 2
+  }).format(amount || 0);
+};
+
+const getCategoryTypeDisplay = (type: string) => {
   switch (type) {
     case 'income':
       return {
@@ -27,4 +35,9 @@ export const getCategoryTypeDisplay = (type: string) => {
         className: 'bg-gray-100 text-gray-800 border border-gray-200'
       };
   }
+};
+
+export { 
+  formatCurrency, 
+  getCategoryTypeDisplay 
 };
