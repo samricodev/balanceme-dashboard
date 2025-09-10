@@ -14,6 +14,7 @@ interface CreateAccountData {
 }
 
 interface UpdateAccountData {
+  userId?: string;
   name?: string;
   type?: string;
   currency?: string;

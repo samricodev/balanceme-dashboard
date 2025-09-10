@@ -18,9 +18,12 @@ const Accounts = () => {
     loading,
     error,
     createAccount,
+    updateAccount,
     deleteAccount
   } = useAccounts();
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [accountId, setAccountId] = useState<string>('');
   const [formData, setFormData] = useState({
     name: '',
     type: 'savings',
@@ -49,7 +52,6 @@ const Accounts = () => {
     });
 
     if (result.success) {
-      // Éxito - cerrar formulario, etc.
       setFormData({
         name: '',
         type: 'ahorro',
@@ -58,13 +60,31 @@ const Accounts = () => {
       });
       setShowCreateForm(false);
     } else {
-      // Error ya está en el estado del hook
       console.error('Error:', result.error);
     }
   };
 
-  const handleEditAccount = (accountId: string) => {
-    alert('Editar cuenta: ' + accountId);
+  const handleEditAccount = async (e: React.FormEvent<HTMLFormElement>, accountId: string) => {
+    e.preventDefault();
+    const result = await updateAccount(accountId, {
+      userId: userId || '',
+      name: formData.name,
+      type: formData.type,
+      currency: formData.currency,
+      balance: Number(formData.balance) || 0
+    });
+
+    if (result.success) {
+      setFormData({
+        name: '',
+        type: 'ahorro',
+        currency: 'MXN',
+        balance: 0
+      });
+      setShowCreateForm(false);
+    } else {
+      console.error('Error:', result.error);
+    }
   };
 
   const handleDeleteAccount = async (accountId: string) => {
@@ -173,7 +193,7 @@ const Accounts = () => {
                       <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
-                      <span>Nueva Cuenta</span>
+                      <span>{isEditing ? 'Editar Cuenta' : 'Nueva Cuenta'}</span>
                     </h2>
                     <button
                       onClick={() => setShowCreateForm(false)}
@@ -186,7 +206,7 @@ const Accounts = () => {
                   </div>
                 </div>
 
-                <form onSubmit={handleCreateAccount} className="p-6 space-y-4">
+                <form onSubmit={isEditing ? (e) => handleEditAccount(e, accountId) : handleCreateAccount} className="p-6 space-y-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Nombre de la cuenta
@@ -257,7 +277,7 @@ const Accounts = () => {
                       type="submit"
                       className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                     >
-                      Crear Cuenta
+                      {isEditing ? 'Actualizar Cuenta' : 'Crear Cuenta'}
                     </button>
                     <button
                       type="button"
@@ -302,7 +322,17 @@ const Accounts = () => {
                       </div>
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => handleEditAccount(account.id)}
+                          onClick={() => {
+                            setIsEditing(true);
+                            setFormData({
+                              name: account.name,
+                              type: account.type,
+                              currency: account.currency,
+                              balance: account.balance
+                            });
+                            setAccountId(account.id);
+                            setShowCreateForm(true);
+                          }}
                           className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
