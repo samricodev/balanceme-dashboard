@@ -15,8 +15,14 @@ export const useDashboard = () => {
   const loading = !accountsData || !categoriesData || !transactionsData;
   const error = transactionsData.error || categoriesData.error || accountsData.error;
 
-  // Totals
-  const totalBalance = accountsData.accounts.reduce((acc, account) => acc + account.balance, 0);
+  const totalBalance = accountsData.accounts.reduce((acc, account) => {
+    if (account.currency === 'USD') {
+      return acc + account.balance * 18;
+    } else if (account.currency === 'EUR') {
+      return acc + account.balance * 20;
+    }
+    return acc + account.balance;
+  }, 0);
   const totalIncome = transactionsData.transactions.filter(tx => tx.type === 'income').reduce((acc, tx) => acc + tx.amount, 0);
   const totalExpenses = transactionsData.transactions.filter(tx => tx.type === 'expense').reduce((acc, tx) => acc + tx.amount, 0);
   const totalSavings = transactionsData.transactions.filter(tx => tx.type === 'saving').reduce((acc, tx) => acc + tx.amount, 0);

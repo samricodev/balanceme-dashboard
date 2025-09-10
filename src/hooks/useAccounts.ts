@@ -33,8 +33,14 @@ export const useAccounts = () => {
   const [error, setError] = useState<string | null>(null);
   const url = `${API_URL}/accounts`;
 
-  // Calcular el balance total (solo si accounts existe)
-  const totalBalance = accounts ? accounts.reduce((sum, account) => sum + (account.balance || 0), 0) : 0;
+  const totalBalance = accounts ? accounts.reduce((sum, account) => {
+    if(account.currency === 'USD') {
+      return sum + (account.balance ? account.balance * 18 : 0);
+    } else if(account.currency === 'EUR') {
+      return sum + (account.balance ? account.balance * 20 : 0);
+    }
+    return sum + (account.balance || 0);
+  }, 0) : 0;
 
   // Fetch inicial de cuentas
   const fetchAccounts = useCallback(async (): Promise<void> => {
