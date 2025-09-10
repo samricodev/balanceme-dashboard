@@ -1,16 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Wallet, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from "../hooks/useAccounts";
 import { Navbar } from "../components/navbar/Navbar";
+import { getAccountIcon } from '../utils/account.util';
+import {
+  getAccountTypeColor,
+  getTextAccountType,
+  formatCurrency
+} from '../utils/account.utils';
 
 const Accounts = () => {
   const {
+    totalBalance,
     accounts,
     loading,
     error,
     createAccount,
+    deleteAccount
   } = useAccounts();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,6 +27,7 @@ const Accounts = () => {
     currency: 'MXN',
     balance: 0
   });
+  const userId = localStorage.getItem('userId') || '';
 
   const navigate = useNavigate();
 
@@ -32,7 +41,7 @@ const Accounts = () => {
   const handleCreateAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = await createAccount({
-      userId: localStorage.getItem('userId') || '',
+      userId: userId || '',
       name: formData.name,
       type: formData.type,
       currency: formData.currency,
@@ -54,96 +63,21 @@ const Accounts = () => {
     }
   };
 
-  // Función para formatear números como moneda
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('es-MX', {
-      style: 'currency',
-      currency: currency || 'MXN',
-      minimumFractionDigits: 2
-    }).format(amount || 0);
+  const handleEditAccount = (accountId: string) => {
+    alert('Editar cuenta: ' + accountId);
   };
 
-  // Función para obtener el color según el tipo de cuenta
-  const getAccountTypeColor = (type: string) => {
-    switch (type?.toLowerCase()) {
-      case 'ahorro':
-      case 'savings':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'corriente':
-      case 'checking':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'credito':
-      case 'credit':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'inversion':
-      case 'investment':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+  const handleDeleteAccount = async (accountId: string) => {
+    if (confirm('¿Estás seguro de que deseas eliminar esta cuenta? Esta acción no se puede deshacer.')) {
+      const result = await deleteAccount(accountId);
+      if (result.success) {
+        // Éxito - actualizar estado, etc.
+      } else {
+        // Error ya está en el estado del hook
+        console.error('Error:', result.error);
+      }
     }
   };
-
-  const getTextAccountType = (type: string) => {
-    switch (type?.toLowerCase()) {
-      case 'ahorro':
-      case 'savings':
-        return 'Ahorro';
-      case 'corriente':
-      case 'checking':
-        return 'Corriente';
-      case 'credito':
-      case 'credit':
-        return 'Crédito';
-      case 'inversion':
-      case 'investment':
-        return 'Inversión';
-      default:
-        return 'Tipo Desconocido';
-    }
-  };
-
-  // Función para obtener icono según tipo de cuenta
-  const getAccountIcon = (type: string) => {
-    switch (type?.toLowerCase()) {
-      case 'ahorro':
-      case 'savings':
-        return (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-        );
-      case 'corriente':
-      case 'checking':
-        return (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-          </svg>
-        );
-      case 'credito':
-      case 'credit':
-        return (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
-          </svg>
-        );
-      case 'inversion':
-      case 'investment':
-        return (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-          </svg>
-        );
-      default:
-        return (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg>
-        );
-    }
-  };
-
-  // Calcular el balance total (solo si accounts existe)
-  const totalBalance = accounts ? accounts.reduce((sum, account) => sum + (account.balance || 0), 0) : 0;
 
   if (loading) {
     return (
@@ -278,6 +212,7 @@ const Accounts = () => {
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
+                      <option value="" defaultChecked disabled>Selecciona un tipo</option>
                       <option value="savings">Cuenta de Ahorro</option>
                       <option value="checking">Cuenta Corriente</option>
                       <option value="credit">Tarjeta de Crédito</option>
@@ -365,9 +300,24 @@ const Accounts = () => {
                       <div className={`p-3 rounded-full ${getAccountTypeColor(account.type)} border`}>
                         {getAccountIcon(account.type)}
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getAccountTypeColor(account.type)}`}>
-                        {account.type || 'Cuenta'}
-                      </span>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleEditAccount(account.id)}
+                          className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAccount(account.id)}
+                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                     <h2 className="text-xl font-bold text-gray-900 mb-1">{account.name}</h2>
                   </div>
@@ -422,15 +372,15 @@ const Accounts = () => {
             </div>
           ) : null}
           {/* Footer informativo */}
-              {accounts.length > 0 && (
-                <div className="mt-8 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden p-6">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">
-                      Mostrando {accounts.length} de {accounts.length} cuentas
-                    </p>
-                  </div>
-                </div>
-              )}
+          {accounts.length > 0 && (
+            <div className="mt-8 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden p-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600">
+                  Mostrando {accounts.length} de {accounts.length} cuentas
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

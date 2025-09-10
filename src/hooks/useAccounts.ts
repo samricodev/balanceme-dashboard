@@ -32,11 +32,14 @@ export const useAccounts = () => {
   const [error, setError] = useState<string | null>(null);
   const url = `${API_URL}/accounts`;
 
+  // Calcular el balance total (solo si accounts existe)
+  const totalBalance = accounts ? accounts.reduce((sum, account) => sum + (account.balance || 0), 0) : 0;
+
   // Fetch inicial de cuentas
   const fetchAccounts = useCallback(async (): Promise<void> => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const userId = localStorage.getItem('userId');
       if (!userId) {
@@ -70,7 +73,7 @@ export const useAccounts = () => {
 
     try {
       const userId = localStorage.getItem('userId');
-      
+
       if (!userId) {
         throw new Error('Usuario no autenticado');
       }
@@ -95,10 +98,10 @@ export const useAccounts = () => {
       }
 
       const newAccount = await response.json();
-      
+
       // Actualizar estado local
       setAccounts(prev => [...prev, newAccount]);
-      
+
       return { success: true, data: newAccount };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -128,14 +131,14 @@ export const useAccounts = () => {
       }
 
       const updatedAccount = await response.json();
-      
+
       // Actualizar estado local
-      setAccounts(prev => 
-        prev.map(account => 
+      setAccounts(prev =>
+        prev.map(account =>
           account.id === accountId ? { ...account, ...updatedAccount } : account
         )
       );
-      
+
       return { success: true, data: updatedAccount };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -165,7 +168,7 @@ export const useAccounts = () => {
 
       // Actualizar estado local
       setAccounts(prev => prev.filter(account => account.id !== accountId));
-      
+
       return { success: true };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -194,15 +197,16 @@ export const useAccounts = () => {
 
   return {
     // Estados
+    totalBalance,
     accounts,
     loading,
     error,
-    
+
     // Operaciones CRUD
     createAccount,
     updateAccount,
     deleteAccount,
-    
+
     // Utilidades
     refetch,
     clearError
