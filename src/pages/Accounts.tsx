@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Wallet, Shield } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAccounts } from "../hooks/useAccounts";
 import { Navbar } from "../components/navbar/Navbar";
-import { useNavigate } from 'react-router-dom';
 
 const Accounts = () => {
   const {
@@ -80,6 +80,25 @@ const Accounts = () => {
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getTextAccountType = (type: string) => {
+    switch (type?.toLowerCase()) {
+      case 'ahorro':
+      case 'savings':
+        return 'Ahorro';
+      case 'corriente':
+      case 'checking':
+        return 'Corriente';
+      case 'credito':
+      case 'credit':
+        return 'Crédito';
+      case 'inversion':
+      case 'investment':
+        return 'Inversión';
+      default:
+        return 'Tipo Desconocido';
     }
   };
 
@@ -383,7 +402,7 @@ const Accounts = () => {
                             </svg>
                             <span>Tipo</span>
                           </span>
-                          <span className="font-semibold text-gray-900">{account.type || 'N/A'}</span>
+                          <span className="font-semibold text-gray-900">{getTextAccountType(account.type) || 'N/A'}</span>
                         </div>
                       </div>
 
