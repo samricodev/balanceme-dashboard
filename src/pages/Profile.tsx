@@ -236,12 +236,12 @@ const Profile = () => {
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button className="flex items-center justify-center space-x-3 p-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+              <button className="flex items-center justify-center space-x-3 p-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl hover:cursor-pointer">
                 <Edit3 size={20} />
                 <span>Editar Perfil</span>
               </button>
 
-              <button className="flex items-center justify-center space-x-3 p-6 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 transform hover:scale-105">
+              <button className="flex items-center justify-center space-x-3 p-6 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 transform hover:scale-105 hover:cursor-pointer">
                 <Lock size={20} />
                 <span>Cambiar Contraseña</span>
               </button>
