@@ -1,3 +1,10 @@
+const AccountTypes = {
+  Ahorro: 'savings',
+  Corriente: 'checking',
+  Crédito: 'credit',
+  Inversión: 'investment'
+};
+
 const CategoryTypes = {
   Ingreso: 'income',
   Gasto: 'expense',
@@ -13,6 +20,7 @@ const TransactionTypes = {
 };
 
 export { 
+  AccountTypes,
   CategoryTypes,
   TransactionTypes
 };

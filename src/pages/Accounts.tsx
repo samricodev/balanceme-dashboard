@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
+import { AccountTypes } from '../utils/enums';
 import { Wallet, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from "../hooks/useAccounts";
@@ -23,6 +24,8 @@ const Accounts = () => {
   } = useAccounts();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [filterType, setFilterType] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [accountId, setAccountId] = useState<string>('');
   const [formData, setFormData] = useState({
     name: '',
@@ -33,6 +36,12 @@ const Accounts = () => {
   const userId = localStorage.getItem('userId') || '';
 
   const navigate = useNavigate();
+
+  const filteredAccounts = accounts.filter(account => {
+    const matchesType = filterType === 'all' || account.type === filterType;
+    const matchesSearch = account.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesType && matchesSearch;
+  });
 
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     setFormData({
@@ -169,8 +178,32 @@ const Accounts = () => {
             </div>
           </div>
 
-          {/* Botón crear cuenta */}
-          <div className="mb-6">
+          {/* Agrupación de búsqueda, filtro y crear */}
+          <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
+            <div className="flex flex-1 gap-4 items-center w-full">
+              <input
+                name="searchCategory"
+                type="text"
+                placeholder="Buscar cuentas..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              <select
+                name="filterType"
+                id="filterType"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="min-w-[180px] px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+              >
+                <option value="all" defaultChecked disabled>Todos los tipos</option>
+                {Object.entries(AccountTypes).map(([key, value]) => (
+                  <option key={value} value={value}>
+                    {key}
+                  </option>
+                ))}
+              </select>
+            </div>
             <button
               onClick={() => setShowCreateForm(true)}
               className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center space-x-2"
@@ -232,10 +265,11 @@ const Accounts = () => {
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     >
                       <option value="" defaultChecked disabled>Selecciona un tipo</option>
-                      <option value="savings">Cuenta de Ahorro</option>
-                      <option value="checking">Cuenta Corriente</option>
-                      <option value="credit">Tarjeta de Crédito</option>
-                      <option value="investment">Cuenta de Inversión</option>
+                      {Object.entries(AccountTypes).map(([key, value]) => (
+                        <option key={value} value={value}>
+                          {key}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -292,7 +326,7 @@ const Accounts = () => {
           )}
 
           {/* Cuentas */}
-          {(!accounts || accounts.length === 0) && !error ? (
+          {(!accounts || filteredAccounts.length === 0) && !error ? (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
               <div className="text-center py-16">
                 <Wallet size={72} className="mx-auto mb-4 text-gray-300" />
@@ -306,9 +340,9 @@ const Accounts = () => {
                 </button>
               </div>
             </div>
-          ) : accounts && accounts.length > 0 ? (
+          ) : accounts && filteredAccounts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {accounts.map(account => (
+              {filteredAccounts.map(account => (
                 <div
                   key={account.id}
                   className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
@@ -401,12 +435,23 @@ const Accounts = () => {
             </div>
           ) : null}
           {/* Footer informativo */}
-          {accounts.length > 0 && (
+          {filteredAccounts.length > 0 && (
             <div className="mt-8 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden p-6">
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  Mostrando {accounts.length} de {accounts.length} cuentas
+                  Mostrando {filteredAccounts.length} de {accounts.length} cuentas
                 </p>
+                {(searchTerm || filterType !== 'all') && (
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setFilterType('all');
+                    }}
+                    className="mt-3 text-indigo-600 hover:text-indigo-900 hover:cursor-pointer text-sm font-medium"
+                  >
+                    Limpiar filtros
+                  </button>
+                )}
               </div>
             </div>
           )}
