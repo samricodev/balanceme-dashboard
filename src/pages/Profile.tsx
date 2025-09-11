@@ -60,7 +60,11 @@ const Profile = () => {
               </div>
               <p className="text-gray-600 mb-6">No se pudo cargar la información del perfil</p>
               <button
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('userId');
+                  navigate("/");
+                }}
                 className="w-full bg-red-600 text-white py-3 px-6 rounded-xl hover:bg-red-700 transition-colors font-semibold"
               >
                 Refrescar Sesión

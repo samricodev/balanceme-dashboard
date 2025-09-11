@@ -68,7 +68,7 @@ export const useCategories = () => {
       }
 
       console.log("Sending category data:", dataToSend);
-      
+
       const response = await fetch(`${url}/create`, {
         method: "POST",
         headers: getAuthHeaders(),
@@ -95,6 +95,63 @@ export const useCategories = () => {
     }
   };
 
+  const updateCategory = async (categoryId: string, updatedData: Partial<Category>): Promise<ApiResponse<Category>> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${url}/${categoryId}`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(updatedData)
+      });
+
+      if (!response.ok) {
+        const errorMessage = await handleApiError(response);
+        throw new Error(errorMessage || 'Error updating category');
+      }
+
+      const updatedCategory = await response.json();
+
+      setCategories((prev) => prev.map(cat => String(cat.id) === String(categoryId) ? updatedCategory : cat));
+
+      return { success: true, data: updatedCategory };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      setError(errorMessage);
+      console.error('Error updating category:', error);
+      return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteCategory = async (categoryId: string): Promise<ApiResponse<null>> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${url}/${categoryId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+      });
+
+      if (!response.ok) {
+        const errorMessage = await handleApiError(response);
+        throw new Error(errorMessage || 'Error deleting category');
+      }
+
+      setCategories((prev) => prev.filter(cat => String(cat.id) !== String(categoryId)));
+
+      return { success: true, data: null };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      setError(errorMessage);
+      console.error('Error deleting category:', error);
+      return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Refrescar cuentas manualmente
   const refetch = useCallback(async (): Promise<void> => {
     await fetchCategories();
@@ -109,15 +166,17 @@ export const useCategories = () => {
     fetchCategories();
   }, [fetchCategories]);
 
-  return { 
+  return {
     // states
-    categories, 
-    loading, 
+    categories,
+    loading,
     error,
 
     // CRUD methods
     fetchCategories,
     createCategory,
+    updateCategory,
+    deleteCategory,
 
     // Utility methods
     refetch,

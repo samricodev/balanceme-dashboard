@@ -15,6 +15,8 @@ const Categories = () => {
     loading,
     error,
     createCategory,
+    updateCategory,
+    deleteCategory,
     refetch
   } = useCategories();
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -66,21 +68,44 @@ const Categories = () => {
     }
   };
 
-  const handleEditCategory = (category: Category) => {
-    setEditingCategory(category);
-    setFormData({
-      name: category.name,
-      type: category.type,
-      color: category.color,
-      icon: category.icon,
-      description: category.description || ''
+  const handleUpdateCategory = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!editingCategory) return;
+    const result = await updateCategory(String(editingCategory.id), {
+      userId: localStorage.getItem('userId') || '',
+      id: editingCategory.id,
+      name: formData.name,
+      type: formData.type,
+      color: formData.color,
+      icon: formData.icon,
+      description: formData.description,
     });
-    setShowCreateForm(true);
+    if (result.success) {
+      refetch();
+      setShowCreateForm(false);
+      setEditingCategory(null);
+      setFormData({
+        name: '',
+        type: 'expense',
+        color: '#3B82F6',
+        icon: 'tag',
+        description: '',
+      });
+    } else {
+      console.error('Error:', result.error);
+    }
   };
 
   const handleDeleteCategory = (categoryId: number) => {
     if (confirm('¿Estás seguro de que quieres eliminar esta categoría?')) {
-      console.log('Eliminar categoría:', categoryId);
+      deleteCategory(String(categoryId)).then(result => {
+        if (result.success) {
+          console.log('Eliminar categoría:', categoryId);
+          refetch();
+        } else {
+          console.error('Error al eliminar categoría:', result.error);
+        }
+      });
     }
   };
 
@@ -147,7 +172,11 @@ const Categories = () => {
               </div>
               <p className="text-gray-600 mb-6">No se pudo cargar la información de las categorías</p>
               <button
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('userId');
+                  navigate("/")
+                }}
                 className="w-full bg-red-600 text-white py-3 px-6 rounded-xl hover:bg-red-700 transition-colors font-semibold"
               >
                 Refrescar Sesión
@@ -303,7 +332,7 @@ const Categories = () => {
                   </div>
                 </div>
 
-                <form onSubmit={handleCreateCategory} className="p-6 space-y-4">
+                <form onSubmit={editingCategory ? handleUpdateCategory : handleCreateCategory} className="p-6 space-y-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Nombre de la categoría
@@ -454,7 +483,17 @@ const Categories = () => {
                       </div>
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => handleEditCategory(category)}
+                          onClick={() => {
+                            setEditingCategory(category);
+                            setFormData({
+                              name: category.name,
+                              type: category.type,
+                              color: category.color,
+                              icon: category.icon,
+                              description: category.description || ''
+                            });
+                            setShowCreateForm(true);
+                          }}
                           className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 hover:cursor-pointer rounded-lg transition-colors"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -522,7 +561,17 @@ const Categories = () => {
                           Ver Movimientos
                         </button>
                         <button
-                          onClick={() => handleEditCategory(category)}
+                          onClick={() => {
+                            setEditingCategory(category);
+                            setFormData({
+                              name: category.name,
+                              type: category.type,
+                              color: category.color,
+                              icon: category.icon,
+                              description: category.description || ''
+                            });
+                            setShowCreateForm(true);
+                          }}
                           className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-xl font-semibold hover:bg-gray-200 hover:cursor-pointer transition-all duration-200 text-sm"
                         >
                           Editar Categoría
@@ -548,7 +597,7 @@ const Categories = () => {
                       setSearchTerm('');
                       setFilterType('all');
                     }}
-                    className="mt-3 text-indigo-600 hover:text-indigo-900 hover:cursor-pointer text-sm font-medium"
+                    className="mt-3 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
                   >
                     Limpiar filtros
                   </button>
