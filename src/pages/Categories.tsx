@@ -548,7 +548,7 @@ const Categories = () => {
                       setSearchTerm('');
                       setFilterType('all');
                     }}
-                    className="mt-3 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                    className="mt-3 text-indigo-600 hover:text-indigo-900 hover:cursor-pointer text-sm font-medium"
                   >
                     Limpiar filtros
                   </button>

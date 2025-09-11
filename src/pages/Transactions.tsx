@@ -510,9 +510,23 @@ const Transactions = () => {
           )}
           {/* Paginación o información adicional */}
           <div className="bg-white rounded-2xl mt-4 p-6 border border-gray-100 overflow-hidden">
-            <p className="text-sm text-gray-600 text-center">
-              Mostrando {filteredTransactions.length} de {transactions.length} movimientos
-            </p>
+            <div className='text-center'>
+              <p className="text-sm text-gray-600">
+                Mostrando {filteredTransactions.length} de {transactions.length} movimientos
+              </p>
+              {(searchTerm || filterType !== 'all' || filterCategory !== 'all') && (
+                <button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setFilterType('all');
+                    setFilterCategory('all');
+                  }}
+                  className="mt-3 text-indigo-600 hover:text-indigo-900 hover:cursor-pointer text-sm font-medium"
+                >
+                  Limpiar filtros
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
