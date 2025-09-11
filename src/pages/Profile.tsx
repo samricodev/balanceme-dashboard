@@ -106,14 +106,16 @@ const Profile = () => {
               <div className="space-y-6">
                 {/* Nombre */}
                 <div className="group">
-                  <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                  <label htmlFor="name" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
                     <User size={16} className="text-indigo-600" />
                     <span>Nombre completo</span>
                   </label>
                   <div className="relative">
                     <input
                       name="name"
+                      id="name"
                       value={profileData?.name || 'No especificado'}
+                      autoComplete="false"
                       readOnly
                       className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 cursor-default"
                     />
@@ -122,14 +124,16 @@ const Profile = () => {
 
                 {/* Email */}
                 <div className="group">
-                  <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                  <label htmlFor="email" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
                     <Mail size={16} className="text-indigo-600" />
                     <span>Correo electrónico</span>
                   </label>
                   <div className="relative">
                     <input
                       name="email"
+                      id="email"
                       value={profileData?.email || 'No especificado'}
+                      autoComplete="false"
                       readOnly
                       className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 cursor-default"
                     />
@@ -138,13 +142,14 @@ const Profile = () => {
 
                 {/* Contraseña */}
                 <div className="group">
-                  <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                  <label htmlFor="password" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
                     <Lock size={16} className="text-indigo-600" />
                     <span>Contraseña</span>
                   </label>
                   <div className="relative">
                     <input
                       name="password"
+                      id="password"
                       type="password"
                       value={profileData?.password || ''}
                       readOnly
@@ -175,8 +180,8 @@ const Profile = () => {
                     </div>
                   </div>
                   {/* Switch moderno funcional */}
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" checked={configurations.enableNotifications} onChange={() => toggleConfiguration("enableNotifications")} />
+                  <label htmlFor="enableNotifications" className="relative inline-flex items-center cursor-pointer">
+                    <input name="enableNotifications" id="enableNotifications" type="checkbox" className="sr-only peer" checked={configurations.enableNotifications} onChange={() => toggleConfiguration("enableNotifications")} />
                     <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
                     <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
                   </label>
@@ -192,8 +197,8 @@ const Profile = () => {
                       <p className="text-xs text-gray-500">Seguridad adicional</p>
                     </div>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" checked={configurations.enable2FA} onChange={() => toggleConfiguration("enable2FA")} />
+                  <label htmlFor="enable2FA" className="relative inline-flex items-center cursor-pointer">
+                    <input name="enable2FA" id="enable2FA" type="checkbox" className="sr-only peer" checked={configurations.enable2FA} onChange={() => toggleConfiguration("enable2FA")} />
                     <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
                     <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
                   </label>
@@ -209,8 +214,8 @@ const Profile = () => {
                       <p className="text-xs text-gray-500">Control de gastos</p>
                     </div>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" checked={configurations.automaticLimits} onChange={() => toggleConfiguration("automaticLimits")} />
+                  <label htmlFor="automaticLimits" className="relative inline-flex items-center cursor-pointer">
+                    <input name="automaticLimits" id="automaticLimits" type="checkbox" className="sr-only peer" checked={configurations.automaticLimits} onChange={() => toggleConfiguration("automaticLimits")} />
                     <div className="w-12 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full transition-colors duration-200"></div>
                     <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 peer-checked:translate-x-6"></div>
                   </label>

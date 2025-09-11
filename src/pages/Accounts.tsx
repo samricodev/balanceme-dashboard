@@ -196,7 +196,7 @@ const Accounts = () => {
                 onChange={(e) => setFilterType(e.target.value)}
                 className="min-w-[180px] px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
               >
-                <option value="all" defaultChecked disabled>Todos los tipos</option>
+                <option value="all" defaultChecked>Todos los tipos</option>
                 {Object.entries(AccountTypes).map(([key, value]) => (
                   <option key={value} value={value}>
                     {key}
