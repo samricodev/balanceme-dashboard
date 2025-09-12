@@ -179,7 +179,7 @@ const Dashboard = () => {
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="amount"
-                    label={({ category, percentage }) => `${category} ${percentage}%`}
+                    label={({ category, percentage }) => `${category} ${Math.round(percentage)}%`}
                   >
                     {expenses.map((entry: { color: string | undefined; }, index: any) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
