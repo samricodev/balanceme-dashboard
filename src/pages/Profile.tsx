@@ -14,11 +14,40 @@ const Profile = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId') ?? '';
 
+  const [showEditProfile, setShowEditProfile] = useState(false);
+
+  const [formData, setFormData] = useState({
+    editName: '',
+    editEmail:  '',
+    editPassword: ''
+  });
+
   const [configurations, setConfigurations] = useState({
     enableNotifications: true,
     enable2FA: false,
     automaticLimits: true,
   });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    console.log(formData);
+  };
+
+  const handleUpdateProfile = async () => {
+    const response = await updateProfile(userId, {
+      name: formData.editName,
+      email: formData.editEmail
+    });
+    if (response.success) {
+      setShowEditProfile(false);
+    } else {
+      // Manejar error (mostrar notificación, etc.)
+      console.error(response.error);
+    }
+  };
 
   const toggleConfiguration = (
     key: "enableNotifications" | "enable2FA" | "automaticLimits",
@@ -228,6 +257,66 @@ const Profile = () => {
             </div>
           </div>
 
+          {showEditProfile && (
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 mb-8">
+              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
+                <Edit3 className="w-6 h-6 text-indigo-600" />
+                <span>Editar Perfil</span>
+              </h3>
+              <div className="space-y-6">
+                {/* Nombre */}
+                <div className="group">
+                  <label htmlFor="editName" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                    <User size={16} className="text-indigo-600" />
+                    <span>Nombre completo</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      name="editName"
+                      id="editName"
+                      value={formData.editName
+                      }
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="group">
+                  <label htmlFor="editEmail" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                    <Mail size={16} className="text-indigo-600" />
+                    <span>Correo electrónico</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      name="editEmail"
+                      id="editEmail"
+                      value={formData.editEmail}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleUpdateProfile}
+                    className="w-full bg-indigo-600 text-white py-3 px-6 rounded-xl hover:bg-indigo-700 transition-colors font-semibold"
+                  >
+                    Guardar Cambios
+                  </button>
+                  <button
+                    onClick={() => setShowEditProfile(false)}
+                    className="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-xl hover:bg-gray-300 transition-colors font-semibold"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Acciones del Perfil */}
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 mb-8">
             <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
@@ -236,7 +325,16 @@ const Profile = () => {
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button className="flex items-center justify-center space-x-3 p-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl hover:cursor-pointer">
+              <button
+                onClick={() => {
+                  setFormData({
+                    editName: profileData?.name || '',
+                    editEmail: profileData?.email || '',
+                    editPassword: ''
+                  });
+                  setShowEditProfile(true);
+                }}
+                className="flex items-center justify-center space-x-3 p-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl hover:cursor-pointer">
                 <Edit3 size={20} />
                 <span>Editar Perfil</span>
               </button>

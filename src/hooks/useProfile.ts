@@ -1,6 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react'
 import { API_URL } from '../config/config';
 import { Profile } from '../types/profile.type';
+
+interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
 
 export const useProfile = () => {
   const [profileData, setProfileData] = useState<Profile | null>(null);
@@ -30,7 +37,7 @@ export const useProfile = () => {
     }
   };
 
-  const updateProfile = async (id: string, updatedData: Partial<Profile>) => {
+  const updateProfile = async (id: string, updatedData: Partial<Profile>): Promise<ApiResponse<any>> => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -47,9 +54,11 @@ export const useProfile = () => {
       }
       const data = await response.json();
       setProfileData(data);
+      return { success: true, data };
     } catch (error) {
       setError('Error updating profile');
       console.error('Error updating profile:', error);
+      return { success: false, error: 'Error updating profile' };
     } finally {
       setLoading(false);
     }
