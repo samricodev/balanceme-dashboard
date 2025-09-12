@@ -33,7 +33,7 @@ export const useDashboard = () => {
     if (existingMonth) {
       if (tx.type === 'income') {
         existingMonth.ingresos += tx.amount;
-      } else {
+      } else if (tx.type === 'expense') {
         existingMonth.gastos += tx.amount;
       }
     } else {
