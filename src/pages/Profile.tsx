@@ -18,7 +18,7 @@ const Profile = () => {
 
   const [formData, setFormData] = useState({
     editName: '',
-    editEmail:  '',
+    editEmail: '',
     editPassword: ''
   });
 
@@ -258,37 +258,38 @@ const Profile = () => {
           </div>
 
           {showEditProfile && (
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 mb-8">
-              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
-                <Edit3 className="w-6 h-6 text-indigo-600" />
-                <span>Editar Perfil</span>
-              </h3>
-              <div className="space-y-6">
-                {/* Nombre */}
-                <div className="group">
-                  <label htmlFor="editName" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                    <User size={16} className="text-indigo-600" />
-                    <span>Nombre completo</span>
-                  </label>
-                  <div className="relative">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
+              <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 border border-indigo-100 transition-all duration-300 scale-100 animate-modal-pop">
+                <button
+                  onClick={() => setShowEditProfile(false)}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-indigo-600 transition-colors text-xl font-bold"
+                  aria-label="Cerrar"
+                >
+                  ×
+                </button>
+                <div className="flex items-center space-x-2 mb-6">
+                  <Edit3 className="w-6 h-6 text-indigo-600" />
+                  <h3 className="text-2xl font-bold text-gray-800">Editar Perfil</h3>
+                </div>
+                <form className="space-y-6">
+                  <div className="group">
+                    <label htmlFor="editName" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                      <User size={16} className="text-indigo-600" />
+                      <span>Nombre completo</span>
+                    </label>
                     <input
                       name="editName"
                       id="editName"
-                      value={formData.editName
-                      }
+                      value={formData.editName}
                       onChange={handleInputChange}
                       className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     />
                   </div>
-                </div>
-
-                {/* Email */}
-                <div className="group">
-                  <label htmlFor="editEmail" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                    <Mail size={16} className="text-indigo-600" />
-                    <span>Correo electrónico</span>
-                  </label>
-                  <div className="relative">
+                  <div className="group">
+                    <label htmlFor="editEmail" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                      <Mail size={16} className="text-indigo-600" />
+                      <span>Correo electrónico</span>
+                    </label>
                     <input
                       name="editEmail"
                       id="editEmail"
@@ -297,22 +298,23 @@ const Profile = () => {
                       className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     />
                   </div>
-                </div>
-
-                <div className="flex space-x-4">
-                  <button
-                    onClick={handleUpdateProfile}
-                    className="w-full bg-indigo-600 text-white py-3 px-6 rounded-xl hover:bg-indigo-700 transition-colors font-semibold"
-                  >
-                    Guardar Cambios
-                  </button>
-                  <button
-                    onClick={() => setShowEditProfile(false)}
-                    className="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-xl hover:bg-gray-300 transition-colors font-semibold"
-                  >
-                    Cancelar
-                  </button>
-                </div>
+                  <div className="flex space-x-4 pt-2">
+                    <button
+                      type="button"
+                      onClick={handleUpdateProfile}
+                      className="w-full bg-indigo-600 text-white py-3 px-6 rounded-xl hover:bg-indigo-700 transition-colors font-semibold shadow-md"
+                    >
+                      Guardar Cambios
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowEditProfile(false)}
+                      className="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-xl hover:bg-gray-300 transition-colors font-semibold shadow-md"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           )}
