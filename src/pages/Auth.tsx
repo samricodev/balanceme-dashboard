@@ -42,9 +42,7 @@ const AuthSystem: React.FC = () => {
           console.log('Token recibido');
           navigate('/dashboard');
         } else {
-          setTimeout(() => {
-            toggleMode();
-          }, 2000);
+          toggleMode();
         }
 
         addToast({
