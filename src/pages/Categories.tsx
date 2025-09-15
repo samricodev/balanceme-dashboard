@@ -562,7 +562,7 @@ const Categories = () => {
                           className="h-full transition-all duration-300"
                           style={{
                             backgroundColor: category.color,
-                            width: `${Math.min((category.transactionCount / Math.max(...categories.map(c => c.transactionCount))) * 100, 100)}%`
+                            width: `${totalTransactions > 0 ? (category.transactionCount / totalTransactions) * 100 : 0}%`
                           }}
                         />
                       </div>
