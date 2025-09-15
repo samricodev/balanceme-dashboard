@@ -1,11 +1,11 @@
 import { useAccounts } from "./useAccounts";
 import { useCategories } from "./useCategories";
 import { useTransactions } from "./useTransactions";
-import { 
-  expenseType, 
-  goalType, 
-  recentTransactionType, 
-  MonthlyData 
+import {
+  expenseType,
+  goalType,
+  recentTransactionType,
+  MonthlyData
 } from "../types/dashboard.type";
 
 export const useDashboard = () => {
@@ -29,21 +29,17 @@ export const useDashboard = () => {
 
   const monthlyData: MonthlyData[] = transactionsData.transactions.reduce((acc: MonthlyData[], tx) => {
     const month = new Date(tx.date).toLocaleString('default', { month: 'short' });
-    const existingMonth = acc.find(m => m.month === month);
-    if (existingMonth) {
-      if (tx.type === 'income') {
-        existingMonth.ingresos += tx.amount;
-      } else if (tx.type === 'expense') {
-        existingMonth.gastos += tx.amount;
-      }
-    } else {
-      acc.push({
-        month,
-        ingresos: tx.type === 'income' ? tx.amount : 0,
-        gastos: tx.type === 'expense' ? tx.amount : 0,
-        balance: (tx.type === 'income' ? tx.amount : 0) - (tx.type === 'expense' ? tx.amount : 0)
-      });
+    let existingMonth = acc.find(m => m.month === month);
+    if (!existingMonth) {
+      existingMonth = { month, ingresos: 0, gastos: 0, balance: 0 };
+      acc.push(existingMonth);
     }
+    if (tx.type === 'income') {
+      existingMonth.ingresos += tx.amount;
+    } else if (tx.type === 'expense') {
+      existingMonth.gastos += tx.amount;
+    }
+    existingMonth.balance = existingMonth.ingresos - existingMonth.gastos;
     return acc;
   }, []);
 
