@@ -90,7 +90,7 @@ const Transactions = () => {
     } else {
       addToast({
         title: 'Error',
-        message: result.error,
+        message: result.error?.message || 'Error al crear el movimiento',
         type: 'error'
       });
       console.error('Error creating transaction:', result.error);

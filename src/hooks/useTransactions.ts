@@ -29,7 +29,10 @@ interface UpdateTransactionData {
 interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
-  error?: string;
+  error?: {
+    message: string;
+    code?: number;
+  };
 }
 
 export const useTransactions = () => {
@@ -104,7 +107,7 @@ export const useTransactions = () => {
       const errorMessage = error instanceof Error ? error.message : String(error);
       setError(errorMessage);
       console.error("Error creating transaction:", error);
-      return { success: false, error: errorMessage };
+      return { success: false, error: { message: errorMessage } };
     } finally {
       setLoading(false);
     }
@@ -143,7 +146,7 @@ export const useTransactions = () => {
       const errorMessage = error instanceof Error ? error.message : String(error);
       setError(errorMessage);
       console.error("Error updating transaction:", error);
-      return { success: false, error: errorMessage };
+      return { success: false, error: { message: errorMessage } };
     } finally {
       setLoading(false);
     }
@@ -170,7 +173,7 @@ export const useTransactions = () => {
       const errorMessage = error instanceof Error ? error.message : String(error);
       setError(errorMessage);
       console.error("Error deleting transaction:", error);
-      return { success: false, error: errorMessage };
+      return { success: false, error: { message: errorMessage } };
     } finally {
       setLoading(false);
     }
