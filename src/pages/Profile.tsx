@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../hooks/useProfile";
 import { Navbar } from "../components/navbar/Navbar";
@@ -12,6 +13,7 @@ const Profile = () => {
     error
   } = useProfile();
   const navigate = useNavigate();
+  const { addToast } = useToast();
   const userId = localStorage.getItem('userId') ?? '';
 
   const [showEditProfile, setShowEditProfile] = useState(false);
@@ -33,7 +35,6 @@ const Profile = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    console.log(formData);
   };
 
   const handleUpdateProfile = async () => {
@@ -44,7 +45,12 @@ const Profile = () => {
     if (response.success) {
       setShowEditProfile(false);
     } else {
-      // Manejar error (mostrar notificación, etc.)
+      addToast({
+        title: 'Error',
+        type: 'error',
+        message: `Error al actualizar el perfil: ${response.error}`,
+        duration: 5000
+      });
       console.error(response.error);
     }
   };
