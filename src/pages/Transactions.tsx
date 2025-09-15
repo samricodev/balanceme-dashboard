@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
+import { useToast } from '../hooks';
 import { Repeat, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { TransactionTypes } from '../utils/enums';
@@ -24,6 +25,7 @@ const Transactions = () => {
   const [filterType, setFilterType] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const { addToast } = useToast();
   const navigate = useNavigate();
 
   const getCategoryName = (categoryId: string) => {
@@ -86,6 +88,11 @@ const Transactions = () => {
       refetch();
       setShowCreateForm(false);
     } else {
+      addToast({
+        title: 'Error',
+        message: result.error,
+        type: 'error'
+      });
       console.error('Error creating transaction:', result.error);
     }
   };
@@ -119,7 +126,7 @@ const Transactions = () => {
     );
   }
 
-  if (error) {
+  if (error === 'Error 401: Unauthorized') {
     return (
       <>
         <Navbar />
@@ -132,7 +139,7 @@ const Transactions = () => {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">Error al cargar</h3>
               </div>
-              <p className="text-gray-600 mb-6 text-center">No se pudo cargar la información de los movimientos</p>
+              <p className="text-gray-600 mb-6 text-center">No se pudo cargar la información de movimientos.</p>
               <button
                 onClick={() => {
                   localStorage.removeItem('token');

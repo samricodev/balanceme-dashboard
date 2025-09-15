@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
+import { useToast } from '../hooks';
 import { Tags, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CategoryTypes } from '../utils/enums';
@@ -23,6 +24,7 @@ const Categories = () => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const { addToast } = useToast();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -64,6 +66,11 @@ const Categories = () => {
       refetch();
       setShowCreateForm(false);
     } else {
+      addToast({
+        title: 'Error',
+        type: 'error',
+        message: result.error
+      });
       console.error('Error:', result.error);
     }
   };
@@ -92,6 +99,11 @@ const Categories = () => {
         description: '',
       });
     } else {
+      addToast({
+        title: 'Error',
+        type: 'error',
+        message: result.error
+      });
       console.error('Error:', result.error);
     }
   };
@@ -157,7 +169,7 @@ const Categories = () => {
     );
   }
 
-  if (error) {
+  if (error === 'Error 401: Unauthorized') {
     return (
       <>
         <Navbar />

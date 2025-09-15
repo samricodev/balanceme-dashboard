@@ -36,7 +36,7 @@ const Dashboard = () => {
     );
   }
 
-  if (error) {
+  if (error === 'Error 401: Unauthorized') {
     return (
       <>
         <Navbar />

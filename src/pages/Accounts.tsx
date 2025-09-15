@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
+import { useToast } from '../hooks';
 import { AccountTypes } from '../utils/enums';
 import { Wallet, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -36,6 +37,7 @@ const Accounts = () => {
   const userId = localStorage.getItem('userId') || '';
 
   const navigate = useNavigate();
+  const { addToast } = useToast();
 
   const filteredAccounts = accounts.filter(account => {
     const matchesType = filterType === 'all' || account.type === filterType;
@@ -69,6 +71,11 @@ const Accounts = () => {
       });
       setShowCreateForm(false);
     } else {
+      addToast({
+        title: 'Error',
+        type: 'error',
+        message: result.error
+      });
       console.error('Error:', result.error);
     }
   };
@@ -92,6 +99,11 @@ const Accounts = () => {
       });
       setShowCreateForm(false);
     } else {
+      addToast({
+        title: 'Error',
+        type: 'error',
+        message: result.error
+      });
       console.error('Error:', result.error);
     }
   };
@@ -123,7 +135,7 @@ const Accounts = () => {
     );
   }
 
-  if (error) {
+  if (error === 'Error 401: Unauthorized') {
     return (
       <>
         <Navbar />

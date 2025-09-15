@@ -74,7 +74,7 @@ const Profile = () => {
     );
   }
 
-  if (error) {
+  if (error === 'Error 401: Unauthorized') {
     return (
       <>
         <Navbar />
