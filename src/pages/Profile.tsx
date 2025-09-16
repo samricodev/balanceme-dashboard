@@ -17,10 +17,12 @@ const Profile = () => {
   const userId = localStorage.getItem('userId') ?? '';
 
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showEditPassword, setShowEditPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     editName: '',
     editEmail: '',
+    oldPassword: '',
     editPassword: ''
   });
 
@@ -49,6 +51,47 @@ const Profile = () => {
         title: 'Error',
         type: 'error',
         message: `Error al actualizar el perfil: ${response.error}`,
+        duration: 5000
+      });
+      console.error(response.error);
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (formData.editPassword.length < 6) {
+      addToast({
+        title: 'Error',
+        type: 'error',
+        message: 'La contraseña debe tener al menos 6 caracteres',
+        duration: 5000
+      });
+      return;
+    }
+    if (formData.oldPassword === profileData?.password) {
+      addToast({
+        title: 'Error',
+        type: 'error',
+        message: 'La contraseña actual no puede ser igual a la nueva',
+        duration: 5000
+      });
+      return;
+    }
+    const response = await updateProfile(userId, {
+      password: formData.editPassword
+    });
+    if (response.success) {
+      setShowEditPassword(false);
+      addToast({
+        title: 'Éxito',
+        type: 'success',
+        message: 'Contraseña actualizada correctamente',
+        duration: 5000
+      });
+    } else {
+      addToast({
+        title: 'Error',
+        type: 'error',
+        message: `Error al actualizar la contraseña: ${response.error}`,
         duration: 5000
       });
       console.error(response.error);
@@ -325,6 +368,75 @@ const Profile = () => {
             </div>
           )}
 
+          {showEditPassword && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
+              <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 border border-indigo-100 transition-all duration-300 scale-100 animate-modal-pop">
+                <button
+                  onClick={() => setShowEditPassword(false)}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-indigo-600 transition-colors text-xl font-bold"
+                  aria-label="Cerrar"
+                >
+                  ×
+                </button>
+                <h3 className="text-xl font-bold text-gray-800 mb-6">Cambiar Contraseña</h3>
+                <form className="space-y-6">
+                  <div className="group">
+                    <label htmlFor="oldPassword" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                      <Lock size={16} className="text-indigo-600" />
+                      <span>Contraseña actual</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        name="oldPassword"
+                        id="oldPassword"
+                        type="password"
+                        value={formData.oldPassword}
+                        onChange={handleInputChange}
+                        autoComplete="new-password"
+                        placeholder="Contraseña actual"
+                        className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                      />
+                    </div>
+                  </div>
+                  <div className="group">
+                    <label htmlFor="editPassword" className="text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                      <Lock size={16} className="text-indigo-600" />
+                      <span>Nueva Contraseña</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        name="editPassword"
+                        id="editPassword"
+                        type="password"
+                        value={formData.editPassword}
+                        onChange={handleInputChange}
+                        autoComplete="new-password"
+                        placeholder="Nueva contraseña"
+                        className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex space-x-4 pt-2">
+                    <button
+                      type="button"
+                      onClick={handleUpdatePassword}
+                      className="w-full bg-indigo-600 text-white py-3 px-6 rounded-xl hover:bg-indigo-700 transition-colors font-semibold shadow-md"
+                    >
+                      Guardar Cambios
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowEditPassword(false)}
+                      className="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-xl hover:bg-gray-300 transition-colors font-semibold shadow-md"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
           {/* Acciones del Perfil */}
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 mb-8">
             <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center space-x-2">
@@ -338,6 +450,7 @@ const Profile = () => {
                   setFormData({
                     editName: profileData?.name || '',
                     editEmail: profileData?.email || '',
+                    oldPassword: '',
                     editPassword: ''
                   });
                   setShowEditProfile(true);
@@ -347,7 +460,17 @@ const Profile = () => {
                 <span>Editar Perfil</span>
               </button>
 
-              <button className="flex items-center justify-center space-x-3 p-6 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 transform hover:scale-105 hover:cursor-pointer">
+              <button
+                onClick={() => {
+                  setFormData({
+                    editName: profileData?.name || '',
+                    editEmail: profileData?.email || '',
+                    oldPassword: '',
+                    editPassword: '',
+                  });
+                  setShowEditPassword(true);
+                }}
+                className="flex items-center justify-center space-x-3 p-6 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-200 transform hover:scale-105 hover:cursor-pointer">
                 <Lock size={20} />
                 <span>Cambiar Contraseña</span>
               </button>
