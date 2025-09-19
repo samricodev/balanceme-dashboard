@@ -43,21 +43,33 @@ export const useDashboard = () => {
     return acc;
   }, []);
 
-  const expenses: expenseType[] = categoriesData.categories
-    .map(category => {
-      if (category.type === 'expense' && category.totalAmount !== 0) {
-        return {
-          category: category.name,
-          amount: Math.abs(category.totalAmount),
-          color: category.color,
-          percentage: totalExpenses !== 0
-            ? (Math.abs(category.totalAmount) / Math.abs(totalExpenses)) * 100
-            : 0
-        };
-      }
-      return null;
+  const expenses: expenseType[] = transactionsData.transactions
+    .filter(tx => tx.type === 'expense')
+    .map(tx => {
+      const category = categoriesData.categories.find(cat => String(cat.id) === tx.categoryId);
+      return category ? {
+        category: category.name,
+        amount: Math.abs(tx.amount),
+        color: category.color,
+        percentage: totalExpenses !== 0
+          ? (Math.abs(tx.amount) / Math.abs(totalExpenses)) * 100
+          : 0
+      } : null;
     })
-    .filter((exp): exp is expenseType => exp !== null);
+    .filter((exp): exp is expenseType => exp !== null)
+    .reduce((acc: expenseType[], curr) => {
+      const existing = acc.find(e => e.category === curr.category);
+      if (existing) {
+        existing.amount += curr.amount;
+        existing.percentage = totalExpenses !== 0
+          ? (existing.amount / Math.abs(totalExpenses)) * 100
+          : 0;
+      } else {
+        acc.push({ ...curr });
+      }
+      return acc;
+    }, [])
+    .sort((a, b) => b.amount - a.amount);
 
   const recentTransactions: recentTransactionType[] = transactionsData.transactions.map(tx => ({
     id: tx.id,
