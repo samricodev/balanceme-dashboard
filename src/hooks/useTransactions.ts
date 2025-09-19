@@ -61,6 +61,9 @@ export const useTransactions = () => {
       }
 
       const data = await response.json();
+      // Sort by date descending
+      data.sort((a: Transaction, b: Transaction) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      
       setTransactions(Array.isArray(data) ? data : []);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
