@@ -126,7 +126,7 @@ const Transactions = () => {
     );
   }
 
-  if (error === 'Error 401: Unauthorized') {
+  if (error === 'Error 401: Unauthorized' || error === 'Error 403: Invalid Token') {
     return (
       <>
         <Navbar />
