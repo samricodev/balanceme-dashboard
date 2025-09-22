@@ -79,15 +79,15 @@ export const useDashboard = () => {
     type: tx.type as 'income' | 'expense' | 'saving' | 'investment'
   })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
 
-  const goalTypes = ['saving', 'ahorro', 'savings', 'meta', 'goal', 'objetivo'];
+  const goalTypes = ['saving', 'ahorro', 'savings'];
   const goals: goalType[] = (accountsData?.accounts || [])
     .filter(acc => acc.type && goalTypes.some(type => acc.type.toLowerCase().includes(type)))
     .map(acc => ({
       id: acc.id,
       name: acc.name,
-      target: acc.balance + 1000 * 2,
-      current: acc.balance + 1000,
-      progress: (acc.balance + 1000) / (acc.balance + 1000 * 2) * 100
+      target: acc.balanceLimit || 0,
+      current: acc.balance || 0,
+      progress: (acc.balance || 0) / (acc.balanceLimit || 0) * 100
     }));
 
   return {

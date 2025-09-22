@@ -11,6 +11,7 @@ interface CreateAccountData {
   type: string;
   currency: string;
   balance?: number;
+  balanceLimit?: number;
 }
 
 interface UpdateAccountData {
@@ -19,6 +20,7 @@ interface UpdateAccountData {
   type?: string;
   currency?: string;
   balance?: number;
+  balanceLimit?: number;
 }
 
 interface ApiResponse<T = any> {
@@ -88,7 +90,8 @@ export const useAccounts = () => {
       const dataToSend = {
         ...accountData,
         userId: userId,
-        balance: accountData.balance || 0
+        balance: accountData.balance || 0,
+        balanceLimit: accountData.balanceLimit || 0,
       };
 
       console.log('Datos a enviar:', dataToSend);

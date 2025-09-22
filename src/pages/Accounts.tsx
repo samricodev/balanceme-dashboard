@@ -32,7 +32,8 @@ const Accounts = () => {
     name: '',
     type: 'savings',
     currency: 'MXN',
-    balance: 0
+    balance: 0,
+    balanceLimit: 0
   });
   const userId = localStorage.getItem('userId') || '';
 
@@ -59,7 +60,8 @@ const Accounts = () => {
       name: formData.name,
       type: formData.type,
       currency: formData.currency,
-      balance: Number(formData.balance) || 0
+      balance: Number(formData.balance) || 0,
+      balanceLimit: Number(formData.balanceLimit) || 0
     });
 
     if (result.success) {
@@ -67,7 +69,8 @@ const Accounts = () => {
         name: '',
         type: 'ahorro',
         currency: 'MXN',
-        balance: 0
+        balance: 0,
+        balanceLimit: 0
       });
       setShowCreateForm(false);
     } else {
@@ -87,7 +90,8 @@ const Accounts = () => {
       name: formData.name,
       type: formData.type,
       currency: formData.currency,
-      balance: Number(formData.balance) || 0
+      balance: Number(formData.balance) || 0,
+      balanceLimit: Number(formData.balanceLimit) || 0
     });
 
     if (result.success) {
@@ -95,7 +99,8 @@ const Accounts = () => {
         name: '',
         type: 'ahorro',
         currency: 'MXN',
-        balance: 0
+        balance: 0,
+        balanceLimit: 0
       });
       setShowCreateForm(false);
     } else {
@@ -321,6 +326,22 @@ const Accounts = () => {
                     />
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Límite de saldo (opcional)
+                    </label>
+                    <input
+                      type="number"
+                      name="balanceLimit"
+                      value={formData.balanceLimit}
+                      onChange={handleInputChange}
+                      step="0.01"
+                      min="0"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                      placeholder="0.00"
+                    />
+                  </div>
+
                   <div className="pt-4 space-y-3">
                     <button
                       type="submit"
@@ -377,7 +398,8 @@ const Accounts = () => {
                               name: account.name,
                               type: account.type,
                               currency: account.currency,
-                              balance: account.balance
+                              balance: account.balance,
+                              balanceLimit: account.balanceLimit || 0
                             });
                             setAccountId(account.id);
                             setShowCreateForm(true);

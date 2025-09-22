@@ -6,6 +6,7 @@ interface Account {
   type: string;
   currency: string;
   balance: number;
+  balanceLimit: number;
   transactions: Transaction[];
 }
 

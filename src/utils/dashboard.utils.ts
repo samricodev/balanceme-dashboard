@@ -31,7 +31,7 @@ const formatPercentage = (value: unknown) => {
   const num = typeof value === 'number' || typeof value === 'bigint'
     ? Number(value)
     : parseFloat(String(value));
-  return `${isNaN(num) ? '0%' : Math.round(num)}%`;
+  return `${isNaN(num) ? '0' : Math.round(num)}%`;
 };
 
 const formatColorTransaction = (type: 'income' | 'expense' | 'saving' | 'investment') => {
