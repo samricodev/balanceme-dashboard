@@ -123,7 +123,7 @@ const Profile = () => {
     );
   }
 
-  if (error === 'Error 401: Unauthorized' || error === 'Error 403: Invalid Token') {
+  if (error === 'Error 401: Unauthorized' || error === 'Invalid token') {
     return (
       <>
         <Navbar />
