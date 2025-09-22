@@ -87,7 +87,7 @@ export const useDashboard = () => {
       name: acc.name,
       target: acc.balanceLimit || 0,
       current: acc.balance || 0,
-      progress: (acc.balance || 0) / (acc.balanceLimit || 0) * 100
+      progress: acc.balanceLimit  && acc.balanceLimit > 0? Math.min((acc.balance / acc.balanceLimit) * 100, 100) : 0
     }));
 
   return {
