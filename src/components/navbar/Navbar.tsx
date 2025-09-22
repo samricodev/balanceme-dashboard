@@ -83,36 +83,40 @@ export const Navbar = () => {
 
       {/* Menú desplegable en móvil */}
       {isOpen && (
-        <div className="md:hidden bg-white shadow-md">
-          <div className="px-4 py-3 space-y-3">
+        <div className="md:hidden fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fade-in flex flex-col items-end">
+          <div className="w-full max-w-xs bg-white rounded-2xl shadow-2xl m-4 p-6 space-y-4 animate-modal-pop">
             <NavLink
               to="/cuentas"
-              className="flex items-center gap-2 text-gray-800 hover:text-gray-600"
+              className="flex items-center gap-4 bg-gray-50 hover:bg-indigo-50 px-4 py-3 rounded-xl text-gray-800 hover:text-indigo-700 font-semibold text-lg transition-all duration-200 shadow-sm"
+              onClick={() => setIsOpen(false)}
             >
               <Wallet size={18} /> Cuentas
             </NavLink>
             <NavLink
               to="/transacciones"
-              className="flex items-center gap-2 text-gray-800 hover:text-gray-600"
+              className="flex items-center gap-4 bg-gray-50 hover:bg-indigo-50 px-4 py-3 rounded-xl text-gray-800 hover:text-indigo-700 font-semibold text-lg transition-all duration-200 shadow-sm"
+              onClick={() => setIsOpen(false)}
             >
               <Repeat size={18} /> Transacciones
             </NavLink>
             <NavLink
               to="/categorias"
-              className="flex items-center gap-2 text-gray-800 hover:text-gray-600"
+              className="flex items-center gap-4 bg-gray-50 hover:bg-indigo-50 px-4 py-3 rounded-xl text-gray-800 hover:text-indigo-700 font-semibold text-lg transition-all duration-200 shadow-sm"
+              onClick={() => setIsOpen(false)}
             >
               <Tags size={18} /> Categorías
             </NavLink>
             <NavLink
               to="/perfil"
-              className="flex items-center gap-2 text-gray-800 hover:text-gray-600"
+              className="flex items-center gap-4 bg-gray-50 hover:bg-indigo-50 px-4 py-3 rounded-xl text-gray-800 hover:text-indigo-700 font-semibold text-lg transition-all duration-200 shadow-sm"
+              onClick={() => setIsOpen(false)}
             >
               <User size={18} /> Perfil
             </NavLink>
             <NavLink
               to="/"
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-gray-800 hover:text-gray-600"
+              onClick={() => { handleLogout(); setIsOpen(false); }}
+              className="flex items-center gap-4 bg-red-50 hover:bg-red-100 px-4 py-3 rounded-xl text-red-700 hover:text-red-900 font-semibold text-lg transition-all duration-200 shadow-sm"
             >
               <LogOut size={18} /> Cerrar sesión
             </NavLink>
