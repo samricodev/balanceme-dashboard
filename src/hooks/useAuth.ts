@@ -90,7 +90,7 @@ export const useAuth = () => {
         resetForm();
         return data;
       } else {
-        throw new Error(data.error.message || `Error en ${isLogin ? 'login' : 'registro'}`);
+        throw new Error(data.error || `Error en ${isLogin ? 'login' : 'registro'}`);
       }
 
     } catch (error) {
