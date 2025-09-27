@@ -10,16 +10,18 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 const Dashboard = () => {
   const {
-    totalBalance,
-    totalIncome,
-    totalExpenses,
-    totalSavings,
-    expenses,
-    recentTransactions,
-    monthlyData,
-    goals,
-    loading,
-    error
+  totalBalance,
+  totalIncome,
+  totalExpenses,
+  totalSavings,
+  expenses,
+  recentTransactions,
+  monthlyData,
+  goals,
+  loading,
+  error,
+  incomeChange,
+  expenseChange
   } = useDashboard();
   const navigate = useNavigate();
 
@@ -97,7 +99,15 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Ingresos este mes</p>
                   <p className="text-2xl font-bold text-green-600">{formatCurrency(totalIncome)}</p>
-                  <p className="text-xs text-green-500">{totalIncome === 0 ? 'No hay ingresos' : '↑ +5.2% vs mes anterior'}</p>
+                  <p className="text-xs text-green-500">
+                    {totalIncome === 0
+                      ? 'No hay ingresos'
+                      : incomeChange > 0
+                        ? `↑ +${incomeChange.toFixed(1)}% vs mes anterior`
+                        : incomeChange < 0
+                          ? `↓ ${Math.abs(incomeChange).toFixed(1)}% vs mes anterior`
+                          : 'Sin cambios vs mes anterior'}
+                  </p>
                 </div>
                 <div className="bg-green-100 p-3 rounded-full">
                   <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,7 +122,15 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Gastos este mes</p>
                   <p className="text-2xl font-bold text-red-600">{formatCurrency(totalExpenses)}</p>
-                  <p className="text-xs text-red-500">{totalExpenses === 0 ? 'No hay gastos' : '↑ +2.1% vs mes anterior'}</p>
+                  <p className="text-xs text-red-500">
+                    {totalExpenses === 0
+                      ? 'No hay gastos'
+                      : expenseChange > 0
+                        ? `↑ +${expenseChange.toFixed(1)}% vs mes anterior`
+                        : expenseChange < 0
+                          ? `↓ ${Math.abs(expenseChange).toFixed(1)}% vs mes anterior`
+                          : 'Sin cambios vs mes anterior'}
+                  </p>
                 </div>
                 <div className="bg-red-100 p-3 rounded-full">
                   <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
