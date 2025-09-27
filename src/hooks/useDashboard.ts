@@ -28,7 +28,8 @@ export const useDashboard = () => {
   const totalSavings = transactionsData.transactions.filter(tx => tx.type === 'saving').reduce((acc, tx) => acc + tx.amount, 0);
 
   const monthlyData: MonthlyData[] = transactionsData.transactions.reduce((acc: MonthlyData[], tx) => {
-    const month = new Date(tx.date).toLocaleString('default', { month: 'short' });
+    const dateObj = new Date(tx.date);
+    const month = dateObj.toLocaleString('default', { month: 'short', year: 'numeric' });
     let existingMonth = acc.find(m => m.month === month);
     if (!existingMonth) {
       existingMonth = { month, ingresos: 0, gastos: 0, balance: 0 };
@@ -42,6 +43,38 @@ export const useDashboard = () => {
     existingMonth.balance = existingMonth.ingresos - existingMonth.gastos;
     return acc;
   }, []);
+
+  // Calcular cambios porcentuales
+
+
+  // Ordenar por fecha descendente (mes más reciente primero)
+  const sortedMonthly = [...monthlyData].sort((a, b) => {
+    const [monthA, yearA] = a.month.split(' ');
+    const [monthB, yearB] = b.month.split(' ');
+    const dateA = new Date(`${monthA} 1, ${yearA}`);
+    const dateB = new Date(`${monthB} 1, ${yearB}`);
+    return dateB.getTime() - dateA.getTime();
+  });
+
+  // Tomar los dos últimos meses
+  const lastMonth = sortedMonthly[0];
+  const prevMonth = sortedMonthly[1];
+
+  // Calcular variación porcentual
+  function getPercentageChange(current: number, previous: number): number {
+    if (!previous || previous === 0) return current === 0 ? 0 : 100;
+    return ((current - previous) / previous) * 100;
+  }
+
+  let incomeChange = 0;
+  let expenseChange = 0;
+  if (lastMonth && prevMonth) {
+    incomeChange = getPercentageChange(lastMonth.ingresos, prevMonth.ingresos);
+    expenseChange = getPercentageChange(lastMonth.gastos, prevMonth.gastos);
+  } else if (lastMonth) {
+    incomeChange = lastMonth.ingresos === 0 ? 0 : 100;
+    expenseChange = lastMonth.gastos === 0 ? 0 : 100;
+  }
 
   const expenses: expenseType[] = transactionsData.transactions
     .filter(tx => tx.type === 'expense')
@@ -91,18 +124,20 @@ export const useDashboard = () => {
     }));
 
   return {
-    totalBalance,
-    totalIncome,
-    totalExpenses,
-    totalSavings,
-    accounts: accountsData,
-    categories: categoriesData,
-    transactions: transactionsData,
-    monthlyData,
-    expenses,
-    recentTransactions,
-    goals,
-    loading,
-    error
+  totalBalance,
+  totalIncome,
+  totalExpenses,
+  totalSavings,
+  accounts: accountsData,
+  categories: categoriesData,
+  transactions: transactionsData,
+  monthlyData,
+  expenses,
+  recentTransactions,
+  goals,
+  loading,
+  error,
+  incomeChange,
+  expenseChange
   };
 };
