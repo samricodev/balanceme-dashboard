@@ -52,7 +52,7 @@ export const Navbar = () => {
                 <Wallet size={18} /> Cuentas
               </NavLink>
               <NavLink
-                to="/transacciones"
+                to="/movimientos"
                 className="flex items-center gap-2 text-gray-800 hover:text-gray-600 px-3 py-2 rounded-md text-sm font-medium"
               >
                 <Repeat size={18} /> Movimientos
@@ -93,11 +93,11 @@ export const Navbar = () => {
               <Wallet size={18} /> Cuentas
             </NavLink>
             <NavLink
-              to="/transacciones"
+              to="/movimientos"
               className="flex items-center gap-4 bg-gray-50 hover:bg-indigo-50 px-4 py-3 rounded-xl text-gray-800 hover:text-indigo-700 font-semibold text-lg transition-all duration-200 shadow-sm"
               onClick={() => setIsOpen(false)}
             >
-              <Repeat size={18} /> Transacciones
+              <Repeat size={18} /> Movimientos
             </NavLink>
             <NavLink
               to="/categorias"

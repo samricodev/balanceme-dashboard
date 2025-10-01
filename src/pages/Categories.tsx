@@ -569,7 +569,7 @@ const Categories = () => {
 
                       {/* Botones de acción */}
                       <div className="pt-2 space-y-2">
-                        <button onClick={() => navigate('/transacciones')} className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 px-4 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg hover:cursor-pointer text-sm">
+                        <button onClick={() => navigate('/movimientos')} className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 px-4 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg hover:cursor-pointer text-sm">
                           Ver Movimientos
                         </button>
                         <button
