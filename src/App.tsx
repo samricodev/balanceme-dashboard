@@ -27,7 +27,7 @@ const App = () => {
               <Accounts />
             </PrivateRoute>
           } />
-          <Route path="/transacciones" element={
+          <Route path="/movimientos" element={
             <PrivateRoute>
               <Transactions />
             </PrivateRoute>
